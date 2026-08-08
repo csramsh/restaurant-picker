@@ -1,0 +1,708 @@
+# CSRA Mesh monthly meetup — restaurant list
+#
+# HOW TO ADD A RESTAURANT
+#   Copy an existing block, paste it at the end, change the values.
+#   Keep the two-space indent and the leading "- " on the "id:" line.
+#
+#   To qualify, a place must have:
+#     * decent seating for a group
+#     * a real dining room. Ordering at the counter is fine — we've met at
+#       McAlister's. Drive-thru fast food is not.
+#     * enough decent food under $20 that everyone has a real choice. The
+#       test is what you CAN eat for under $20, not what the top of the menu
+#       costs — a few expensive dishes don't disqualify anywhere. The Feed
+#       Sack and Ironwood Tavern both stay in normal rotation on that basis
+#       even though listings quote them higher. Somewhere only goes on the
+#       special list when there isn't enough under $20 to choose from.
+#     * a menu with enough range that nobody in the group is stuck with
+#       nothing they can eat
+#     * a noise level you can hold a conversation over. We retired Doc's
+#       Porchside over this one.
+#     * ordering that works for a mixed group. Everyone should be able to
+#       order their own plate. We retired Meimei's because dim sum means
+#       ordering a la carte and sharing, which trips up anyone new to it.
+#     * still serving at 6:30pm, since that's always our start time. K and J
+#       closed at 6 and was no use to us.
+#     * billing that works for a big group — they'll split checks, and there's
+#       no surprise automatic gratuity. Worth asking when you call ahead.
+#       Frog and the Hen is off the list for doing both.
+#     * an actual building. Delivery-only "ghost kitchen" brands show up on
+#       listings sites looking like real restaurants. Click the map link — if
+#       it lands on a different restaurant's address, that's what it is. The
+#       Saucy Hen caught us this way.
+#
+# HOW TO REMOVE ONE
+#   Set  active: no  instead of deleting it. That keeps its history intact,
+#   and always say why in the notes. Use this for places that have closed or
+#   that we've ruled out for good.
+#
+#   If a place is fine but just too pricey for a normal month, DON'T retire
+#   it. Leave  active: yes  and set  category: special  instead. Those stay
+#   out of the normal draw, but the site can list them on their own when
+#   we're planning a holiday dinner.
+#
+# FIELDS
+#   id       required, unique, lowercase-with-dashes. NEVER change it after a
+#            visit is recorded — data/history.csv points at it.
+#   name     required, as you'd say it out loud, and JUST the name. Don't put
+#            the location in it — no "The Feed Sack (Aiken)". The site adds
+#            the area itself, so that would come out as "... (Aiken) — Aiken".
+#            Two branches of the same chain are told apart by their area and
+#            address, which is what those fields are for.
+#   area     required, must be one of:
+#            Augusta, South Augusta, Hephzibah, Martinez, Evans,
+#            Grovetown, North Augusta, Aiken
+#   address  optional but please fill it in. No quotes needed even though it
+#            has commas. Left blank, the map link just searches the name.
+#   cuisine  optional, free text
+#   open_days  optional. The days they're open AND still serving at our
+#            6:30pm start. Space-separated, from Mon Tue Wed Thu Fri Sat Sun:
+#              open_days: Mon Tue Wed Thu Fri
+#            Leave it out if you don't know. The picker treats a missing
+#            value as "assume open every day", so this can be filled in a
+#            few at a time rather than all at once.
+#   category optional, either normal (the default) or special.
+#            special = a real, open restaurant that's too pricey for a normal
+#            month. Kept out of the usual draw, listed separately.
+#   notes    optional, free text — hours, parking, "big back room", etc.
+#   active   yes or no. no means closed or ruled out for good, NOT expensive.
+#
+# ---------------------------------------------------------------------------
+# SEEDED 2026-08-05, addresses looked up 2026-08-06 from current online
+# listings. Addresses should be right but nobody has stood outside these
+# buildings to check. Prices and opening hours are NOT verified — several
+# entries carry a note saying so. Anything still worth a second look says
+# what's wrong in its notes field.
+# ---------------------------------------------------------------------------
+
+restaurants:
+
+  # === Augusta ==============================================================
+
+  - id: farmhaus-burger
+    name: Farmhaus Burger
+    area: Augusta
+    address: 1204 Broad St, Augusta, GA 30901
+    cuisine: Burgers
+    open_days: Tue Wed Thu Fri Sat
+    notes: Small dining room. Fine most nights, but they host events and it gets
+      too loud to talk on those — check their schedule before proposing it,
+      and confirm they can seat a group.
+    active: yes
+
+  - id: nacho-mamas
+    name: Nacho Mama's Burritos
+    area: Augusta
+    address: 976 Broad St, Augusta, GA 30901
+    cuisine: Mexican
+    open_days: Tue Wed Thu Fri Sat Sun
+    notes: Order at the counter, but there is real seating. Checked August 2026 —
+      fits our criteria.
+    active: yes
+
+  - id: mellow-mushroom-augusta
+    name: Mellow Mushroom
+    area: Augusta
+    address: 1102 Broad St, Augusta, GA 30901
+    cuisine: Pizza
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Easily the most group-friendly room downtown. Checked August 2026 — fits
+      our criteria.
+    active: yes
+
+  - id: the-pizza-joint
+    name: The Pizza Joint
+    area: Augusta
+    address: 1245 Broad St, Augusta, GA 30901
+    cuisine: Pizza
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Patio seating. Checked August 2026 — fits our criteria.
+    active: yes
+
+  - id: french-market-grille
+    name: French Market Grille
+    area: Augusta
+    address: 425 Highland Ave, Augusta, GA 30909
+    cuisine: Cajun
+    open_days: Mon Tue Wed Thu Fri Sat
+    category: special
+    notes: Surrey Center. Menu prices still aren't posted online, but Google
+      reports a $10-60 a head spread — the top of that is well past our normal
+      range, which matches how it's remembered. Revisit if someone sees a
+      current menu.
+    active: yes
+
+  - id: mcalisters-exchange
+    name: McAlister's Deli
+    area: Augusta
+    address: 3602 Exchange Ln, Augusta, GA 30909
+    cuisine: Deli and sandwiches
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: May 2026 Mesh and Meet was here. Order at the counter, which the group
+      is fine with.
+    active: yes
+
+  - id: rhineharts-washington
+    name: Rhinehart's Oyster Bar
+    area: Augusta
+    address: 3051 Washington Rd, Augusta, GA 30907
+    cuisine: Seafood
+    open_days: Mon Tue Wed Thu Fri Sat
+    notes: June 2026 Mesh and Meet was here. Closed Sundays.
+    active: yes
+
+  - id: trattoria-polipo
+    name: Trattoria Polipo
+    area: Augusta
+    address: 3629 Walton Way Ext, Augusta, GA 30909
+    cuisine: Italian
+    open_days: Mon Wed Thu Fri Sat Sun
+    category: special
+    notes: Prices checked August 2026 and they're too high for a normal month.
+      Closed Tuesdays; otherwise dinner service runs 4:30pm to 9:00pm, so 6:30
+      works if we ever do go.
+    active: yes
+
+  - id: olivianas
+    name: Oliviana Ristorante & Bar Italiano
+    area: Augusta
+    address: 399 Highland Ave, Augusta, GA 30909
+    cuisine: Italian
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Surrey Center. Pizza and pasta alongside fuller entrees, and the
+      prices are fine for us despite the upscale billing. Open every day;
+      Monday starts at 3pm. An earlier note claimed Sunday was brunch only,
+      which the listing contradicts.
+    active: yes
+
+  - id: la-michoacana
+    name: La Michoacána Creamery and Mexican Grill
+    area: Augusta
+    address: 2805 Washington Rd, Augusta, GA 30909
+    cuisine: Mexican
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: On the corner of Washington Rd and Alexander Dr. Google lists it at
+      $10-20 a head, so the price fits, but nobody from the group has actually
+      eaten there yet.
+    active: yes
+
+  - id: abel-brown
+    name: Abel Brown Southern Kitchen & Oyster Bar
+    area: Augusta
+    address: 491 Highland Ave, Augusta, GA 30909
+    cuisine: Southern and seafood
+    open_days: Mon Tue Wed Thu Fri Sat
+    category: special
+    notes: Google reports $100+ a head, so this is a big-occasion place rather
+      than a slightly-pricey one — a different bracket from the rest of the
+      special list. Upper level of Surrey Center. Closed Sundays.
+    active: yes
+
+  - id: village-deli
+    name: Village Deli Sub & Pub
+    area: Augusta
+    address: 2803 Wrightsboro Rd Ste 28, Augusta, GA 30909
+    cuisine: Deli and sandwiches
+    open_days: Mon Tue Wed Thu Fri Sat
+    notes: Can be noisy at times — worth a thought before picking it.
+    active: yes
+
+  # === South Augusta ========================================================
+
+  - id: villa-europa
+    name: Villa Europa
+    area: South Augusta
+    address: 3044 Deans Bridge Rd, Augusta, GA 30906
+    cuisine: German and Italian
+    notes: CLOSED as of August 2026. There's talk of them moving but nothing has
+      happened yet. Big dining room that handled groups well, so flip this
+      back to active if they reopen somewhere.
+    active: no
+
+  - id: veracruz-peach-orchard
+    name: Veracruz Mexican Restaurant
+    area: South Augusta
+    address: 3216 Peach Orchard Rd, Augusta, GA 30906
+    cuisine: Mexican
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Checked August 2026 — fits our criteria.
+    active: yes
+
+  - id: sconyers-bbq
+    name: Sconyers Bar-B-Que
+    area: South Augusta
+    address: 2250 Sconyers Way, Augusta, GA 30906
+    cuisine: Barbecue
+    open_days: Thu Fri Sat
+    notes: Open Thursday through Saturday only. Check before proposing it.
+    active: yes
+
+  # === Hephzibah ============================================================
+  #
+  # We don't meet down here. The area exists so the one entry we know about
+  # has somewhere honest to live, and in case that ever changes. With no
+  # active restaurants in it, the picker skips the area entirely.
+
+  - id: toritos-hephzibah
+    name: Toritos Fresh Mex
+    area: Hephzibah
+    address: 2503 GA-88, Hephzibah, GA 30815
+    cuisine: Mexican
+    notes: CLOSED — reported permanently closed. Was previously on the list as a
+      South Augusta place on Peach Orchard Rd, which was wrong on both counts.
+    active: no
+
+  # === Martinez =============================================================
+
+  - id: cucina-503
+    name: Cucina 503
+    area: Martinez
+    address: 502 Furys Ferry Rd, Martinez, GA 30907
+    cuisine: Italian
+    open_days: Wed Thu Fri Sat
+    category: special
+    notes: Special because there isn't enough under $20 to choose from, not
+      because the average is high — the $20-30 band on its own wouldn't rule
+      it out. Closed Mondays and Tuesdays, and Sunday is lunch only. The same
+      kitchen runs LOCAL for lunch, which is a cheaper way in.
+    active: yes
+
+  - id: 2-boys-pizza
+    name: 2 Boys Pizza & Grill
+    area: Martinez
+    address: 3851 Evans to Locks Rd, Martinez, GA 30907
+    cuisine: Pizza
+    open_days: Mon Tue Wed Thu Fri Sat
+    notes: December 2025 and January 2026 Mesh and Meets were both here. On the
+      corner of Furys Ferry Rd and Evans to Locks Rd, so listings under either
+      road are the same place.
+    active: yes
+
+  - id: ironwood-westlake
+    name: Ironwood Tavern
+    area: Martinez
+    address: 1040 West Lake Commons Dr, Martinez, GA 30907
+    cuisine: American
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Second Ironwood location, in the West Lake shopping center off Furys
+      Ferry Rd. The group is fine with either one. Listings quote $20-30 a
+      head here but $10-20 at the Evans branch for the same menu, which shows
+      how rough those figures are — there's plenty under $20, so it stays in
+      the normal rotation.
+    active: yes
+
+  - id: frog-and-the-hen
+    name: Frog and the Hen
+    area: Martinez
+    address: 466 Flowing Wells Rd Ste 4, Martinez, GA 30907
+    cuisine: Southern
+    notes: Retired — automatic 20% gratuity on big tables and they won't split
+      checks for parties over 12. Both together make it a bad fit for us.
+    active: no
+
+  - id: taqueria-mi-casita
+    name: Taqueria Mi Casita
+    area: Martinez
+    address: 3935 Washington Rd, Martinez, GA 30907
+    cuisine: Mexican
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Checked August 2026 — fits our criteria.
+    active: yes
+
+  - id: french-market-west
+    name: French Market Grille West
+    area: Martinez
+    address: 368 Furys Ferry Rd, Martinez, GA 30907
+    cuisine: Cajun
+    open_days: Wed Thu Fri Sat
+    category: special
+    notes: Sister restaurant to French Market Grille at Surrey Center and off the
+      list for the same reason, above our normal price range.
+    active: yes
+
+  - id: poblanos-martinez
+    name: Poblano's Mexican Grill
+    area: Martinez
+    address: 341 Baston Rd, Martinez, GA 30907
+    cuisine: Mexican
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: On the corner at Furys Ferry Rd. Open until 10pm on weeknights and 11pm
+      Friday through Sunday.
+    active: yes
+
+  - id: monterrey-martinez
+    name: Monterrey Mexican Restaurant
+    area: Martinez
+    address: 4018 Washington Rd, Martinez, GA 30907
+    cuisine: Mexican
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: There is a separate North Augusta location on the list, and another in
+      Evans that we have not added.
+    active: yes
+
+  - id: toki-furys-ferry
+    name: Toki Japanese Steakhouse
+    area: Martinez
+    address: 362 Furys Ferry Rd Ste 4, Martinez, GA 30907
+    cuisine: Japanese
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Hibachi tables suit a group. In the Earth Fare plaza, two doors from
+      French Market Grille West. Listings quote $20-30 a head, but there's
+      sushi, udon and tempura alongside the hibachi, so there's plenty under
+      $20 and it stays in the normal rotation.
+    active: yes
+
+  - id: willie-jewells
+    name: Willie Jewell's Old School Bar-B-Q
+    area: Martinez
+    address: 3512 Riverwatch Pkwy, Martinez, GA 30907
+    cuisine: Barbecue
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Order at the counter. Address confirmed against their own site and
+      Google Maps — some aggregator listings say 3412, which is wrong.
+    active: yes
+
+  # === Evans ================================================================
+
+  - id: ironwood-evans
+    name: Ironwood Tavern
+    area: Evans
+    address: 5117 Washington Rd Ste 1, Evans, GA 30809
+    cuisine: American
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: April 2026 Mesh and Meet was here. Shopping center next to Publix.
+    active: yes
+
+  - id: the-saucy-hen
+    name: The Saucy Hen
+    area: Evans
+    address: 4203 Washington Rd, Evans, GA 30809
+    cuisine: Southern
+    notes: NOT A REAL RESTAURANT — delivery-only virtual brand run out of Ruby
+      Tuesday's kitchen. There's nowhere to sit down; the address is Ruby
+      Tuesday's. Kept here so nobody adds it again off a listings site.
+    active: no
+
+  - id: smoke-and-barrels
+    name: Smoke and Barrels
+    area: Evans
+    address: 3118 William Few Pkwy Ste 9, Evans, GA 30809
+    cuisine: Barbecue
+    open_days: Wed Thu Fri Sat Sun
+    notes: Checked August 2026 — fits our criteria.
+    active: yes
+
+  - id: goolsbys
+    name: Goolsby's
+    area: Evans
+    address: 4460 Washington Rd Ste 9, Evans, GA 30809
+    cuisine: Southern
+    open_days: Mon Tue Wed Thu Fri Sat
+    notes: Generous portions. Open Monday to Saturday but closes at 8pm, only
+      90 minutes after our 6:30 start — don't pick it for a night people will
+      want to linger. Sunday is 11am to 2pm, so no use to us. An earlier note
+      here said Monday to Friday, which the listing contradicts.
+    active: yes
+
+  - id: hokkaido-evans
+    name: Hokkaido
+    area: Evans
+    address: 4460 Washington Rd Ste 20, Evans, GA 30809
+    cuisine: Japanese and Thai
+    open_days: Tue Wed Thu Fri Sat Sun
+    notes: Liberty Square. Closed Mondays. Listings quote $20-30 a head, but
+      there's enough under $20 between the sushi and noodle dishes, so it
+      stays in the normal rotation.
+    active: yes
+
+  - id: seoul-korean-kitchen
+    name: Seoul Korean Kitchen
+    area: Evans
+    address: 4408 Evans to Locks Rd Ste M, Evans, GA 30809
+    cuisine: Korean
+    open_days: Tue Wed Thu Fri Sat
+    notes: Checked August 2026 — fits our criteria.
+    active: yes
+
+  - id: cork-and-flame
+    name: Cork and Flame
+    area: Evans
+    address: 4414 Evans to Locks Rd, Evans, GA 30809
+    cuisine: American
+    open_days: Mon Tue Wed Thu Fri Sat
+    category: special
+    notes: Off the regular rotation because it's upscale fine dining and over our
+      usual price range, but worth keeping in mind for a holiday dinner or
+      similar. Closed Sundays.
+    active: yes
+
+  - id: fukuro-bar-sushi
+    name: Fukuro Bar and Sushi
+    area: Evans
+    address: 5100 Washington Rd, Evans, GA 30809
+    cuisine: Sushi
+    notes: Retired — too expensive for a normal month, and not special enough to be
+      worth putting on the special occasion list either. Was closed Tuesdays,
+      opening at 4:30pm.
+    active: no
+
+  - id: winstons-tavern
+    name: Winston's Tavern
+    area: Evans
+    address: 880 Ronald Reagan Dr, Evans, GA 30809
+    cuisine: Pub food
+    open_days: Tue Wed Thu Fri Sat
+    category: special
+    notes: Too pricey for a normal month. Billed as elevated dining and craft
+      cocktails, and the prices bear that out. Worth keeping in mind for
+      something special.
+    active: yes
+
+  - id: salsas-evans
+    name: Salsa's Mexican Restaurant
+    area: Evans
+    address: 4460 Washington Rd Ste 2, Evans, GA 30809
+    cuisine: Mexican
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: July 2026 Mesh and Meet was here. Also listed as Salsa's Bar & Grill.
+    active: yes
+
+  - id: rhineharts-evans
+    name: Rhinehart's Oyster Bar
+    area: Evans
+    address: 305 North Bel Air Rd, Evans, GA 30809
+    cuisine: Seafood
+    open_days: Mon Tue Wed Thu Fri Sat
+    notes: Second Rhinehart's location. The group is fine with either one. Checked
+      August 2026 — fits our criteria.
+    active: yes
+
+  - id: augsburg-haus
+    name: Augsburg Haus
+    area: Evans
+    address: 4460 Washington Rd Ste 17, Evans, GA 30809
+    cuisine: German
+    open_days: Wed Thu Fri Sat Sun
+    notes: Liberty Square. Closed Mondays and Tuesdays, open the rest of the
+      week including Sunday. Listings quote $20-30 a head.
+    active: yes
+
+  - id: izumi-evans
+    name: Izumi Japanese Buffet
+    area: Evans
+    address: 4368 Washington Rd, Evans, GA 30809
+    cuisine: Japanese buffet
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Dinner buffet runs about $18, so it fits but sits at the top of our
+      range. Dinner service starts at 5pm.
+    active: yes
+
+  # === Grovetown ============================================================
+
+  - id: la-cocina-de-el-rey
+    name: La Cocina De El Rey
+    area: Grovetown
+    address: 419 Lewiston Rd Ste 1, Grovetown, GA 30813
+    cuisine: Mexican
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: No menu posted online, but Google reports $10-20 a head, so the
+      price fits. Open every day; Sunday closes at 7:30pm.
+    active: yes
+
+  - id: habaneros-grovetown
+    name: Habanero's Mexican Grill
+    area: Grovetown
+    address: 235 Meridian Dr, Grovetown, GA 30813
+    cuisine: Mexican
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: February 2026 Mesh and Meet was here. Meridian Dr is just off Gateway
+      Blvd.
+    active: yes
+
+  - id: docs-porchside
+    name: Doc's Porchside
+    area: Grovetown
+    address: 5147 Bluegrass Trail, Grovetown, GA 30813
+    cuisine: American
+    notes: September 2025 Mesh and Meet was here. Retired — too loud to hold a
+      conversation. Near Exit 190 off I-20.
+    active: no
+
+  - id: meimeis-dim-sum
+    name: Meimei's Dim Sum House
+    area: Grovetown
+    address: 251 Meridian Dr, Grovetown, GA 30813
+    cuisine: Chinese
+    notes: Retired — dim sum means ordering a la carte and sharing across the
+      table, which is a pain for anyone not used to it. Nothing wrong with the
+      food or the prices.
+    active: no
+
+  - id: yummy-pho
+    name: Yummy Pho
+    area: Grovetown
+    address: 284 Meridian Dr, Grovetown, GA 30813
+    cuisine: Vietnamese
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Gateway Square Plaza. Fits our criteria, though it may not pull many
+      votes in a poll. Open every day; Sunday is 11:30am to 7pm.
+    active: yes
+
+  - id: mi-rinconcito
+    name: Mi Rinconcito
+    area: Grovetown
+    address: 5114 Wrightsboro Rd, Grovetown, GA 30813
+    cuisine: Mexican
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Also listed as Taqueria Mi Rinconcito. Checked August 2026 — fits our
+      criteria.
+    active: yes
+
+  - id: kj-soul-bar-grill
+    name: K and J Soul Bar and Grill
+    area: Grovetown
+    address: 720 E Robinson Ave Ste 101, Grovetown, GA 30813
+    cuisine: Soul food
+    notes: Retired. Google Maps says permanently closed, though Yelp still showed
+      it open in June 2026 — sources disagree. Either way its listed hours
+      were Tue-Fri 11am-6pm, closing before our 6:30 start, so it never worked
+      for a dinner meetup.
+    active: no
+
+  - id: azteca-maya
+    name: Azteca Maya
+    area: Grovetown
+    address: 508 Oxbow Dr, Grovetown, GA 30813
+    cuisine: Mexican
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Still open as of August 2026. Listings put it in Grovetown rather than
+      Evans. Open until 10pm most nights.
+    active: yes
+
+  # === North Augusta ========================================================
+
+  - id: antonios-italian
+    name: Antonio's Italian Eatery
+    area: North Augusta
+    address: 336 Georgia Ave Ste 103, North Augusta, SC 29841
+    cuisine: Italian
+    open_days: Tue Wed Thu Fri Sat
+    notes: Checked August 2026 — fits our criteria.
+    active: yes
+
+  - id: the-feed-sack-na
+    name: The Feed Sack
+    area: North Augusta
+    address: 1069 Edgefield Rd Ste 103, North Augusta, SC 29860
+    cuisine: Southern
+    open_days: Mon Tue Wed Thu Fri Sat
+    notes: Checked August 2026 — some pricey items on the menu but plenty of
+      cheaper options, so it stays in the normal rotation. This is the North
+      Augusta one; there's a separate Aiken location on the list.
+    active: yes
+
+  - id: the-back-porch
+    name: The Back Porch Grill
+    area: North Augusta
+    address: 808 Belvedere Clearwater Rd, North Augusta, SC 29841
+    cuisine: American
+    open_days: Tue Wed Thu Fri Sat
+    notes: Checked August 2026 — fits our criteria.
+    active: yes
+
+  - id: brinks-tavern
+    name: Brink's Tavern
+    area: North Augusta
+    address: 200 Georgia Ave Ste 101, North Augusta, SC 29841
+    cuisine: Pub food
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Checked August 2026 — fits our criteria.
+    active: yes
+
+  - id: manuels-bread-cafe
+    name: Manuel's Bread Cafe
+    area: North Augusta
+    address: 505 Railroad Ave Ste 100, North Augusta, SC 29841
+    cuisine: French
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    category: special
+    notes: Hammond's Ferry. Too bougie for a normal month and we mostly meet for
+      dinner, which is the pricey end of their menu. Brunch runs $14-18. Worth
+      keeping in mind for something special.
+    active: yes
+
+  - id: monterrey-north-augusta
+    name: Monterrey Mexican Restaurant
+    area: North Augusta
+    address: 436 E Martintown Rd, North Augusta, SC 29841
+    cuisine: Mexican
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Separate owners aside, there is a Martinez location on the list too.
+    active: yes
+
+  # === Aiken ================================================================
+
+  - id: lankys-on-laurens
+    name: Lanky's on Laurens
+    area: Aiken
+    address: 140 Laurens St SW, Aiken, SC 29801
+    cuisine: Southern and American
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Opened April 2026 in the old Electric Eats space, at the Laurens St
+      entrance to the Alley. Menu checked August 2026 — prices are fine for us
+      despite the "upscale casual" billing.
+    active: yes
+
+  - id: electric-eats
+    name: Electric Eats
+    area: Aiken
+    address: 140 Laurens St SW, Aiken, SC 29801
+    cuisine: Burgers and pub food
+    notes: CLOSED for good in November 2025. Lanky's on Laurens took over the
+      space. Kept here so nobody re-adds it by mistake.
+    active: no
+
+  - id: the-feed-sack-aiken
+    name: The Feed Sack
+    area: Aiken
+    address: 1593 Whiskey Rd, Aiken, SC 29803
+    cuisine: Southern
+    open_days: Mon Tue Wed Thu Fri Sat
+    notes: Sister to the North Augusta location. Same deal on prices — some
+      expensive items, plenty of cheaper ones.
+    active: yes
+
+  - id: park-ave-oyster-bar
+    name: Park Avenue Oyster Bar and Grill
+    area: Aiken
+    address: 224 Park Ave SW, Aiken, SC 29801
+    cuisine: Seafood
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    category: special
+    notes: Way too expensive for a normal month.
+    active: yes
+
+  - id: pizza-joint-aiken
+    name: The Pizza Joint
+    area: Aiken
+    address: 125 Richland Ave W, Aiken, SC 29801
+    cuisine: Pizza
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Same chain as the Broad St one in Augusta, which we've already
+      approved. Brick-oven pizza and calzones, $10-20 a head. Open every day,
+      though Sunday closes at 7pm.
+    active: yes
+
+  - id: neon-fig
+    name: Neon Fig
+    area: Aiken
+    address: 110 Park Ave SW, Aiken, SC 29801
+    cuisine: Fine dining
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    category: special
+    notes: Downtown Aiken, a block from Park Avenue Oyster Bar. Bills itself as
+      fine dining, hence the special list. Brunch and lunch 10-3, dinner 5-9.
+      Some directory listings claim it's closed Tuesdays with dinner only
+      Thursday to Saturday, contradicting its own listing — worth ringing ahead
+      before anyone drives over.
+    active: yes

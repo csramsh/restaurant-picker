@@ -1,0 +1,26 @@
+{
+  "groupName": "CSRA Mesh",
+
+  "startTime": "18:30",
+
+  "eventNameTemplate": "{month} Meet & Mesh",
+  "eventDescriptionTemplate": "{name} — {area}\n{address}\nMap: {maps}\n\nCome hang out, talk radios, and eat. All are welcome.",
+
+  "candidatesPerMonth": 3,
+
+  "areaCooldownMonths": 2,
+  "restaurantCooldownMonths": 6,
+
+  "areaWeightExponent": 2,
+
+  "areas": [
+    "Augusta",
+    "South Augusta",
+    "Hephzibah",
+    "Martinez",
+    "Evans",
+    "Grovetown",
+    "North Augusta",
+    "Aiken"
+  ]
+}
