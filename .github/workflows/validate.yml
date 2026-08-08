@@ -1,0 +1,26 @@
+name: Validate data
+
+# Catches a broken restaurants.yaml or history.csv before it reaches the site.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install pyyaml
+
+      - name: Check the data files
+        run: python scripts/validate.py
+
+      - name: Test the opening-hours parser
+        run: python scripts/test_hours.py

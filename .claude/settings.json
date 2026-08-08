@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python scripts/validate.py:*)",
+      "Bash(python scripts/test_hours.py:*)",
+      "Bash(python scripts/hours.py:*)",
+      "Bash(python scripts/report.py:*)",
+      "Bash(python scripts/setup.py:*)"
+    ]
+  }
+}

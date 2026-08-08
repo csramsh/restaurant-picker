@@ -1,0 +1,263 @@
+# EXAMPLE DATA — every restaurant below is invented.
+#
+# This file belongs to the upstream project. Leave it alone: it's the fallback
+# the site uses before you've added your own list, and deleting or editing it
+# will cause merge conflicts when you sync with upstream.
+#
+# Your list goes in  data/restaurants.yaml  alongside this one, and takes
+# precedence automatically. `python scripts/setup.py` will create it for you.
+#
+# ---------------------------------------------------------------------------
+#
+# HOW TO ADD A RESTAURANT
+#   Copy an existing block, paste it at the end, change the values.
+#   Keep the two-space indent and the leading "- " on the "id:" line.
+#
+#   Write your group's own acceptance criteria here — what makes somewhere a
+#   sensible place for you to meet. The example criteria below are a starting
+#   point, not rules handed down from anywhere:
+#     * decent seating for a group
+#     * a real dining room; ordering at the counter is fine
+#     * affordable enough that everyone has a real choice
+#     * a menu with enough range that nobody is stuck with nothing they can eat
+#     * quiet enough to hold a conversation
+#     * still serving when you actually arrive
+#
+# HOW TO REMOVE ONE
+#   Set  active: no  instead of deleting it. That keeps its history intact,
+#   and always say why in the notes.
+#
+#   If a place is fine but just too pricey for a normal month, DON'T retire
+#   it. Leave  active: yes  and set  category: special  instead. Those stay
+#   out of the normal draw, and the site can list them on their own.
+#
+# FIELDS
+#   id       required, unique, lowercase-with-dashes. NEVER change it after a
+#            visit is recorded — data/history.csv points at it.
+#   name     required, and JUST the name. Don't put the location in it — the
+#            site adds the area itself. Two branches of one chain are told
+#            apart by their area and address.
+#   area     required, must be one of the areas in config.json
+#   address  optional but worth filling in. No quotes needed despite commas.
+#   cuisine  optional, free text
+#   open_days  optional. The days they're open AND still serving when you
+#            start. Space-separated, from Mon Tue Wed Thu Fri Sat Sun.
+#            Leave it out if you don't know — missing means "assume open".
+#   category optional, normal (the default) or special.
+#   notes    optional, free text. Record WHY a judgement was made, not just
+#            what — the reason is what stops it being re-litigated later.
+#   active   yes or no. no means closed or ruled out, NOT expensive.
+# ---------------------------------------------------------------------------
+
+restaurants:
+
+  # === Downtown =============================================================
+
+  - id: market-street-pizza
+    name: Market Street Pizza
+    area: Downtown
+    address: 14 Market St, Downtown
+    cuisine: Pizza
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Big room at the back, easily seats a dozen.
+    active: yes
+
+  - id: the-copper-kettle
+    name: The Copper Kettle
+    area: Downtown
+    address: 88 Bridge Rd, Downtown
+    cuisine: Cafe and sandwiches
+    open_days: Mon Tue Wed Thu Fri
+    notes: Closes at 7pm, so only works for an early start.
+    active: yes
+
+  - id: alvarado
+    name: Alvarado
+    area: Downtown
+    address: 3 Exchange Pl, Downtown
+    cuisine: Spanish
+    open_days: Wed Thu Fri Sat
+    category: special
+    notes: Lovely, and far too expensive for an ordinary month. Kept for
+      the occasional celebration.
+    active: yes
+
+  - id: harbour-lights
+    name: Harbour Lights
+    area: Downtown
+    address: 51 Quay Rd, Downtown
+    cuisine: Fish and chips
+    open_days: Tue Wed Thu Fri Sat Sun
+    active: yes
+
+  - id: the-tram-shed
+    name: The Tram Shed
+    area: Downtown
+    address: 7 Depot St, Downtown
+    cuisine: Burgers
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Noisy on Fridays, fine otherwise.
+    active: yes
+
+  # === Riverside ============================================================
+
+  - id: the-anchor
+    name: The Anchor
+    area: Riverside
+    address: 4 Quay Side, Riverside
+    cuisine: Pub food
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Long benches outside, useful in summer.
+    active: yes
+
+  - id: saffron-house
+    name: Saffron House
+    area: Riverside
+    address: 90 Canal St, Riverside
+    cuisine: Indian
+    open_days: Tue Wed Thu Fri Sat Sun
+    notes: Closed Mondays.
+    active: yes
+
+  - id: fishermans-rest
+    name: The Fisherman's Rest
+    area: Riverside
+    address: 201 Wharf Ln, Riverside
+    cuisine: Seafood
+    open_days: Tue Wed Thu Fri Sat Sun
+    notes: Closed Mondays. Ask for the long table by the window.
+    active: yes
+
+  - id: rosas-taqueria
+    name: Rosa's Taqueria
+    area: Riverside
+    address: 17 Canal St, Riverside
+    cuisine: Mexican
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    active: yes
+
+  # === Old Town =============================================================
+
+  - id: bellweather-bakery
+    name: Bellweather Bakery
+    area: Old Town
+    address: 23 Guild Row, Old Town
+    cuisine: Cafe
+    open_days: Mon Tue Wed Thu Fri Sat
+    notes: Does hot food until 8pm on weekdays.
+    active: yes
+
+  - id: nonnas-table
+    name: Nonna's Table
+    area: Old Town
+    address: 77 Chapel St, Old Town
+    cuisine: Italian
+    open_days: Wed Thu Fri Sat Sun
+    active: yes
+
+  - id: the-blue-door
+    name: The Blue Door
+    area: Old Town
+    address: 5 Chandler's Yard, Old Town
+    cuisine: Pub food
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Gets loud on match nights — worth checking the fixture list.
+    active: yes
+
+  - id: golden-crane
+    name: Golden Crane
+    area: Old Town
+    address: 42 Lantern St, Old Town
+    cuisine: Chinese
+    open_days: Tue Wed Thu Fri Sat Sun
+    active: yes
+
+  - id: the-old-mill
+    name: The Old Mill
+    area: Old Town
+    address: 1 Mill Race, Old Town
+    cuisine: British
+    notes: CLOSED — the building was sold in 2025. Kept so the history still
+      resolves, and so nobody adds it again.
+    active: no
+
+  # === Northgate ============================================================
+
+  - id: the-hopyard
+    name: The Hopyard
+    area: Northgate
+    address: 8 Brewery Ln, Northgate
+    cuisine: Pub food
+    open_days: Tue Wed Thu Fri Sat Sun
+    active: yes
+
+  - id: king-street-noodles
+    name: King Street Noodles
+    area: Northgate
+    address: 55 King St, Northgate
+    cuisine: Thai
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    active: yes
+
+  - id: the-carvery
+    name: The Carvery
+    area: Northgate
+    address: 401 Northgate Ave, Northgate
+    cuisine: Roasts
+    open_days: Thu Fri Sat Sun
+    category: special
+    notes: Set menu only, and priced for a celebration rather than a Tuesday.
+    active: yes
+
+  - id: sami-grill
+    name: Sami's Grill
+    area: Northgate
+    address: 310 Northgate Ave, Northgate
+    cuisine: Middle Eastern
+    open_days: Mon Tue Wed Thu Fri Sat
+    notes: Counter service, but there's plenty of seating.
+    active: yes
+
+  - id: the-signal-box
+    name: The Signal Box
+    area: Northgate
+    address: 2 Station Approach, Northgate
+    cuisine: Burgers
+    open_days: Wed Thu Fri Sat Sun
+    active: yes
+
+  # === Westfield ============================================================
+
+  - id: the-orchard-inn
+    name: The Orchard Inn
+    area: Westfield
+    address: 3 Orchard Way, Westfield
+    cuisine: British
+    open_days: Wed Thu Fri Sat Sun
+    active: yes
+
+  - id: taco-libre
+    name: Taco Libre
+    area: Westfield
+    address: 210 Westfield Rd, Westfield
+    cuisine: Mexican
+    open_days: Mon Tue Wed Thu Fri Sat Sun
+    notes: Counter service, big shared tables.
+    active: yes
+
+  - id: pho-lantern
+    name: Pho Lantern
+    area: Westfield
+    address: 66 Westfield Rd, Westfield
+    cuisine: Vietnamese
+    open_days: Mon Tue Wed Thu Fri Sat
+    active: yes
+
+  - id: greenfield-kitchen
+    name: Greenfield Kitchen
+    area: Westfield
+    address: 129 Orchard Way, Westfield
+    cuisine: Vegetarian
+    open_days: Tue Wed Thu Fri Sat Sun
+    notes: The only place on the list everyone can definitely eat at.
+    active: yes

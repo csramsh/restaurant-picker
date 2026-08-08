@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Restaurant Picker</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1 id="siteTitle">Restaurant Picker</h1>
+  <p class="sub">A few candidates a month, spread across the region, without going back to the same place too soon.</p>
+</header>
+
+<p id="loading">Loading the restaurant list…</p>
+
+<div id="fatal" hidden class="fatal">
+  <h2>Could not load the data</h2>
+  <p id="fatalMsg"></p>
+  <p id="fatalHint" hidden>
+    It looks like you opened this file directly from your computer. Browsers
+    block that. Use the published site instead
+    (your GitHub Pages URL), or run
+    <code>python -m http.server</code> in this folder and open
+    <code>http://localhost:8000</code>.
+  </p>
+</div>
+
+<main id="main" hidden>
+
+  <div id="warnings" class="warnings" hidden></div>
+
+  <div class="monthbar">
+    <label for="monthInput">Month</label>
+    <input type="month" id="monthInput">
+
+    <label for="dayToggle">Days</label>
+    <div class="dropdown">
+      <button id="dayToggle" class="secondary" aria-expanded="false">Any day</button>
+      <div id="dayPanel" class="dropdown-panel" hidden>
+        <p class="hint">
+          Tick the days you're putting to the poll. Places open on
+          <em>any</em> ticked day are offered. Somewhere with no hours
+          recorded is assumed open.
+        </p>
+        <div id="dayBoxes" class="daygrid"></div>
+        <button id="dayClear" class="secondary small">Clear</button>
+      </div>
+    </div>
+
+    <label for="specialsSelect">Special spots</label>
+    <select id="specialsSelect">
+      <option value="exclude">Exclude specials</option>
+      <option value="include">Include specials</option>
+      <option value="only">Only specials</option>
+    </select>
+  </div>
+  <p class="hint">
+    Change the month to look at a past or future draw. Special spots are real
+    places that are just too pricey for a normal month — they sit out of the
+    usual rotation until you ask for them.
+  </p>
+
+  <nav class="tabs">
+    <button id="btn-pick" class="active">Pick</button>
+    <button id="btn-announce">Announce</button>
+    <button id="btn-record">Record</button>
+    <button id="btn-data">The list</button>
+  </nav>
+
+  <!-- ------------------------------------------------------------ Pick -->
+  <section id="tab-pick">
+    <h2>Candidates for <span id="pickMonthLabel"></span></h2>
+    <p class="hint">
+      Seeded from the month, so everyone loading this page sees the same
+      shortlist until somebody rerolls. Currently showing the <strong id="nonceLabel"></strong>.
+    </p>
+
+    <div id="pickNotes"></div>
+    <div id="candidates" class="cards"></div>
+
+    <div class="actions">
+      <button id="rerollBtn" class="secondary">Reroll</button>
+    </div>
+
+    <h3>Make the Discord poll</h3>
+    <p class="hint">
+      A Discord poll can't be made by pasting a block of text. Click the
+      <strong>+</strong> next to the message box, choose <strong>Create
+      Poll</strong>, and paste these into the matching fields one at a time.
+      Set the duration yourself.
+    </p>
+
+    <div class="form">
+      <label for="pollQuestion">Question</label>
+      <div class="copyrow">
+        <input type="text" id="pollQuestion" readonly>
+        <span class="count" id="questionCount"></span>
+        <button id="copyQuestion" class="secondary">Copy</button>
+      </div>
+    </div>
+
+    <div id="pollAnswers" class="form"></div>
+
+    <p class="hint">
+      Discord caps answers at 55 characters and won't take links, which is why
+      these are just the name and area.
+    </p>
+
+    <h3>Post this straight after</h3>
+    <textarea id="pollText" rows="9" readonly></textarea>
+    <div class="actions">
+      <button id="copyPoll">Copy message</button>
+    </div>
+    <p class="hint">
+      The addresses and map links that won't fit in the poll. Send it as a
+      normal message so people can find the place.
+    </p>
+  </section>
+
+  <!-- -------------------------------------------------------- Announce -->
+  <section id="tab-announce" hidden>
+    <h2>Announce it</h2>
+    <p class="hint">
+      Once the vote closes. Pick the month and the winner and the three boxes
+      below fill in. Nothing here is saved — writing it down happens on
+      <strong>Record</strong>, after you've been.
+    </p>
+
+    <div class="form">
+      <label for="announceMonth">Month</label>
+      <input type="month" id="announceMonth">
+
+      <label for="announceRestaurant">Winner</label>
+      <select id="announceRestaurant"></select>
+    </div>
+
+    <p class="hint">
+      Make a new Scheduled Event in Discord, set it to somewhere else /
+      external, and paste these three into the matching boxes. You still have
+      to set the date and time yourself — and check the winner is actually
+      open that day.
+    </p>
+
+    <div class="form">
+      <label for="eventName">Event name</label>
+      <div class="copyrow">
+        <input type="text" id="eventName" readonly>
+        <button id="copyEventName" class="secondary">Copy</button>
+      </div>
+
+      <label for="eventLocation">Location</label>
+      <div class="copyrow">
+        <input type="text" id="eventLocation" readonly>
+        <button id="copyEventLocation" class="secondary">Copy</button>
+      </div>
+    </div>
+
+    <label for="eventDesc"><strong>Description</strong></label>
+    <textarea id="eventDesc" rows="6" readonly></textarea>
+    <div class="actions">
+      <button id="copyEventDesc">Copy description</button>
+    </div>
+    <p class="hint">
+      The wording comes from <code>eventDescriptionTemplate</code> in
+      config.json — change it there if you want it to read differently.
+    </p>
+  </section>
+
+  <!-- ---------------------------------------------------------- Record -->
+  <section id="tab-record" hidden>
+    <h2>Record it</h2>
+    <p class="hint">
+      After you've been — not when the vote closes. Record <strong>where you
+      actually ate</strong>, even if that wasn't one of the candidates. This is
+      the only thing keeping the cooldowns honest: an unrecorded month means
+      the picker will happily send you back.
+    </p>
+
+    <div class="form">
+      <label for="recordMonth">Month</label>
+      <input type="month" id="recordMonth">
+
+      <label for="recordRestaurant">Where you went</label>
+      <select id="recordRestaurant"></select>
+
+      <label for="recordNotes">Notes (optional)</label>
+      <input type="text" id="recordNotes" placeholder="e.g. 14 people, back room was perfect">
+    </div>
+    <p class="hint">
+      The note is just the third column of <code>history.csv</code>. Add one
+      later, or change your mind about it, by editing that file the same way.
+    </p>
+
+    <textarea id="recordLine" rows="2" readonly></textarea>
+    <div class="actions">
+      <button id="copyLine">Copy line</button>
+    </div>
+
+    <p class="hint">Paste it at the bottom of history.csv:</p>
+    <p>
+      <a id="editLink" class="bigbutton" target="_blank" rel="noopener">
+        Open history.csv in the GitHub editor
+      </a>
+      <span id="editLinkHint" class="hint" hidden>Running locally, so there's no
+      repo to link to — paste the line into <code>data/history.csv</code>
+      yourself.</span>
+    </p>
+    <p class="hint" id="commitHint">
+      Add it as a new last line, then click the green <strong>Commit
+      changes</strong> button. The site picks it up within a minute or two.
+    </p>
+
+    <h3>Recent months</h3>
+    <div class="tablewrap">
+      <table id="recentTable">
+        <thead>
+          <tr><th>Month</th><th>Where</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="hint">
+      A gap here is a month nobody wrote down. The full list is on
+      <strong>The list</strong>.
+    </p>
+  </section>
+
+  <!-- ------------------------------------------------------------ Data -->
+  <section id="tab-data" hidden>
+    <h2>The list</h2>
+    <p id="summary" class="hint"></p>
+    <p class="hint">
+      To add, edit, or retire a restaurant, edit
+      <a id="editRestaurantsLink" target="_blank" rel="noopener"
+         >data/restaurants.yaml</a>.
+      Instructions are in comments at the top of that file.
+    </p>
+
+    <h3>Areas</h3>
+    <div class="tablewrap">
+      <table id="areaTable">
+        <thead>
+          <tr>
+            <th>Area</th><th>In rotation</th><th>Special</th>
+            <th>In the running</th><th>Visits</th>
+            <th>Last visit</th><th>Ago</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h3>History</h3>
+    <div class="tablewrap">
+      <table id="histTable">
+        <thead>
+          <tr><th>Month</th><th>Restaurant</th><th>Area</th><th>Notes</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h3>Restaurants</h3>
+    <div class="tablewrap">
+      <table id="restTable">
+        <thead>
+          <tr><th>Name</th><th>Area</th><th>Open days</th><th>Last visit</th><th>Status</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <a id="sourceLink" hidden>Source and data on GitHub</a><span id="footerSep" hidden> · </span>
+  <a id="runbookLink" hidden>Monthly runbook</a>
+</footer>
+
+<script src="vendor/js-yaml.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

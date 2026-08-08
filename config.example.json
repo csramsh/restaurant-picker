@@ -1,0 +1,23 @@
+{
+  "groupName": "Example Group",
+
+  "startTime": "18:30",
+
+  "eventNameTemplate": "{month} Meetup",
+  "eventDescriptionTemplate": "{name} — {area}\n{address}\nMap: {maps}\n\nCome along, everyone's welcome.",
+
+  "candidatesPerMonth": 3,
+
+  "areaCooldownMonths": 2,
+  "restaurantCooldownMonths": 6,
+
+  "areaWeightExponent": 2,
+
+  "areas": [
+    "Downtown",
+    "Riverside",
+    "Old Town",
+    "Northgate",
+    "Westfield"
+  ]
+}

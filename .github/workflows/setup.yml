@@ -1,0 +1,57 @@
+name: Set up my group
+
+# One-time setup for a fresh fork. Actions tab -> "Set up my group" -> Run
+# workflow. Creates config.json and data/ from the shipped examples and
+# commits them. Copies only — nothing is moved or deleted.
+on:
+  workflow_dispatch:
+    inputs:
+      group_name:
+        description: 'Your group name, e.g. "Rambling Club"'
+        required: false
+        default: ''
+      blank_history:
+        description: 'Start with an empty history (recommended)'
+        type: boolean
+        required: false
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install pyyaml
+
+      - name: Copy the examples into place
+        run: |
+          python scripts/setup.py \
+            ${{ inputs.group_name && format('--name "{0}"', inputs.group_name) || '' }} \
+            ${{ inputs.blank_history && '--blank-history' || '' }}
+
+      - name: Check the result
+        run: python scripts/validate.py
+
+      - name: Commit
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Already set up — nothing to commit."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add config.json data/restaurants.yaml data/history.csv
+          git commit -m "Set up this fork with its own config and data"
+          git push
+
+      - name: What to do next
+        run: |
+          echo "::notice::Edit config.json and data/restaurants.yaml, then enable Pages under Settings if you haven't."
