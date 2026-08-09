@@ -16,6 +16,13 @@ var CAP_MONTHS = 60; // treat "never visited" and "5+ years ago" the same
 
 var DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
+// Spelled out for poll answers. "Thu" is fine in a filter you're looking at;
+// it's terse in a poll somebody reads on their phone.
+var DAY_NAMES = {
+  Mon: 'Monday', Tue: 'Tuesday', Wed: 'Wednesday', Thu: 'Thursday',
+  Fri: 'Friday', Sat: 'Saturday', Sun: 'Sunday'
+};
+
 var state = {
   config: null,
   restaurants: [],
@@ -440,10 +447,33 @@ var POLL_ANSWER_MAX = 55;
 // Kept as the fallback so a config written before this was configurable still
 // produces exactly what it used to.
 var DEFAULT_POLL_QUESTION = '{group} — {monthYear} meetup. Where should we eat?';
+var DEFAULT_DAY_POLL_QUESTION = '{group} — {monthYear}. Which day suits?';
 
 function pollQuestion(month) {
   return fillTemplate(state.config.pollQuestionTemplate || DEFAULT_POLL_QUESTION,
                       null, month);
+}
+
+function dayPollQuestion(month) {
+  return fillTemplate(
+    state.config.dayPollQuestionTemplate || DEFAULT_DAY_POLL_QUESTION,
+    null, month);
+}
+
+// Whether the group settles the day by poll before settling the place. Some
+// do, some just declare it. Default on; it's the more careful sequence.
+function dayPollEnabled() {
+  return state.config.dayPoll !== false;
+}
+
+// How many places a given day is worth, so nobody offers a day the group
+// can't actually eat on. Deliberately ignores cooldowns: this is about which
+// days are viable at all, not who is due a visit.
+function placesOpenOn(day) {
+  return state.restaurants.filter(function (r) {
+    return r.active && matchesSpecialsFilter(r) &&
+           (!r.openDays || r.openDays.indexOf(day) !== -1);
+  }).length;
 }
 
 // Answers can't hold an address and stay under 55 characters, so they carry
@@ -468,9 +498,80 @@ function pollText(result, month) {
   return lines.join('\n');
 }
 
+// Step 1: the poll that settles which day. Its answers are the days ticked in
+// the Days dropdown, so the one control drives both polls — you tick several
+// for this, then tick only the winner for step 2.
+function renderDayPoll() {
+  var on = dayPollEnabled();
+  el('dayPollStep').hidden = !on;
+  el('placePollHeading').textContent = on ? 'Step 2 — poll the place'
+                                          : 'Make the poll';
+  el('placePollIntro').hidden = !on;
+  if (!on) return;
+
+  var q = dayPollQuestion(state.month);
+  el('dayPollQuestion').value = q;
+  el('dayQuestionCount').textContent = q.length + '/' + POLL_QUESTION_MAX;
+
+  var box = el('dayPollAnswers');
+  box.innerHTML = '';
+
+  var offered = state.days.length ? state.days : [];
+  offered.forEach(function (d, i) {
+    var value = DAY_NAMES[d];
+    var id = 'dayPollAns' + i;
+    var open = placesOpenOn(d);
+
+    var label = document.createElement('label');
+    label.setAttribute('for', id);
+    label.appendChild(text('Answer ' + (i + 1)));
+    box.appendChild(label);
+
+    var row = document.createElement('div');
+    row.className = 'copyrow';
+
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.id = id;
+    input.readOnly = true;
+    input.value = value;
+    row.appendChild(input);
+
+    var count = document.createElement('span');
+    count.className = open === 0 ? 'count over' : 'count';
+    count.appendChild(text(open + ' open'));
+    row.appendChild(count);
+
+    var btn = document.createElement('button');
+    btn.className = 'secondary';
+    btn.appendChild(text('Copy'));
+    btn.onclick = function () { copyFrom(id, btn); };
+    row.appendChild(btn);
+
+    box.appendChild(row);
+  });
+
+  var hint = el('dayPollHint');
+  hint.className = 'hint';
+  if (!offered.length) {
+    hint.textContent = 'No days ticked yet, so there are no answers to give ' +
+      'Discord. Open the Days dropdown at the top and tick the ones you\'re ' +
+      'willing to offer.';
+  } else if (offered.some(function (d) { return placesOpenOn(d) === 0; })) {
+    hint.className = 'warn';
+    hint.textContent = 'One of the days you\'re offering has nothing open. If ' +
+      'it wins, you\'ll have nowhere to go — untick it before you post.';
+  } else {
+    hint.textContent = 'Post this first. When it closes, come back and tick ' +
+      'only the winning day.';
+  }
+}
+
 function renderPick() {
   var month = state.month;
   var result = pick(month, state.nonce);
+
+  renderDayPoll();
 
   el('pickMonthLabel').textContent = monthLabel(month);
   el('nonceLabel').textContent = state.nonce === 0
@@ -1036,6 +1137,7 @@ function boot() {
 
     el('copyPoll').onclick = function () { copyFrom('pollText', this); };
     el('copyQuestion').onclick = function () { copyFrom('pollQuestion', this); };
+    el('copyDayQuestion').onclick = function () { copyFrom('dayPollQuestion', this); };
     el('copyLine').onclick = function () { copyFrom('recordLine', this); };
     el('copyEventName').onclick = function () { copyFrom('eventName', this); };
     el('copyEventLocation').onclick = function () { copyFrom('eventLocation', this); };

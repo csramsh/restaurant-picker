@@ -85,12 +85,40 @@
       <button id="rerollBtn" class="secondary">Reroll</button>
     </div>
 
-    <h3>Make the Discord poll</h3>
     <p class="hint">
       A Discord poll can't be made by pasting a block of text. Click the
       <strong>+</strong> next to the message box, choose <strong>Create
-      Poll</strong>, and paste these into the matching fields one at a time.
-      Set the duration yourself.
+      Poll</strong>, and paste the fields below in one at a time. Set the
+      duration yourself.
+    </p>
+
+    <!-- Step 1 is hidden entirely when "dayPoll" is false in config.json. -->
+    <div id="dayPollStep">
+      <h3>Step 1 — poll the day</h3>
+      <p class="hint">
+        Tick the days you're willing to offer in the <strong>Days</strong>
+        dropdown at the top, and they become the answers here. The counts are
+        how many places are open on each — don't offer a day nobody can eat on.
+      </p>
+
+      <div class="form">
+        <label for="dayPollQuestion">Question</label>
+        <div class="copyrow">
+          <input type="text" id="dayPollQuestion" readonly>
+          <span class="count" id="dayQuestionCount"></span>
+          <button id="copyDayQuestion" class="secondary">Copy</button>
+        </div>
+      </div>
+
+      <div id="dayPollAnswers" class="form"></div>
+      <p class="hint" id="dayPollHint"></p>
+    </div>
+
+    <h3 id="placePollHeading">Step 2 — poll the place</h3>
+    <p class="hint" id="placePollIntro">
+      Once the day is settled, come back and tick <em>just that day</em> above.
+      Every candidate is then somewhere that's genuinely open when you'll be
+      there, and these three answers are the poll.
     </p>
 
     <div class="form">

@@ -16,33 +16,41 @@ the browser. To drive it locally instead:
 python -m http.server 8731
 ```
 
-## 1. Draw the candidates
+**The day is settled before the place, in two separate polls.** That ordering
+is the whole reason the day filter exists — tick several days for the first
+poll, then tick only the winner for the second, and every candidate in the
+second poll is somewhere genuinely open when the group turns up. A group that
+declares the day instead sets `"dayPoll": false` and step 1 disappears.
 
-The **Pick** tab shows three restaurants, one per area. The draw is seeded
-from the month, so everyone loading the page that month sees the same three —
-that's deliberate, so nobody wonders whether it was rerolled until someone's
-favourite came up. **Reroll** bumps a visible nonce; if you use it, say so in
-Discord.
+## 1. Poll the day
 
-If the day is already decided, tick it in the **Days** dropdown first. Places
-open on *any* ticked day are offered — the poll settles day and place
-together, so anywhere working on at least one candidate day is fair game.
-
-**Special spots** stays on "Exclude specials" for a normal month. "Only
-specials" draws from the pricier places set aside for holiday dinners.
-
-## 2. Post the poll
+Ticking days in the **Days** dropdown fills in the answers under **Step 1 —
+poll the day**, each with a count of how many places are open on it. A day
+showing **0 open** is a trap — if it wins there's nowhere to go — and the page
+warns in yellow rather than letting it through quietly.
 
 **A Discord poll cannot be made by pasting a block of text.** The site gives
 you each field separately because Discord's poll form takes them one at a
 time: **+** next to the message box → **Create Poll** → paste the Question and
 each Answer → set Duration.
 
-Answers are capped at **55 characters** and can't contain links, which is why
-they're just name and area. The site shows a live character count.
+## 2. Poll the place
 
-Then send the *Post this straight after* block as an ordinary message — it
-carries the addresses and map links that won't fit in the poll.
+When the day poll closes, tick **only the winning day**. The **Pick** tab then
+shows three restaurants, one per area, all open on that day.
+
+The draw is seeded from the month, so everyone loading the page that month
+sees the same three — deliberate, so nobody wonders whether it was rerolled
+until someone's favourite came up. **Reroll** bumps a visible nonce; if you
+use it, say so in Discord.
+
+**Special spots** stays on "Exclude specials" for a normal month. "Only
+specials" draws from the pricier places set aside for holiday dinners.
+
+Answers are capped at **55 characters** and can't contain links, which is why
+they're just name and area. The site shows a live character count. Then send
+the *Post this straight after* block as an ordinary message — it carries the
+addresses and map links that won't fit in the poll.
 
 ## 3. Create the Discord event
 
@@ -53,9 +61,10 @@ Event → Somewhere Else** form.
 Set the date and time from the poll. If your group always starts at the same
 time, record that in GROUP.md so nobody has to ask.
 
-Because the day filter is "any of the ticked days", **check the winner is
-actually open on the winning day** before creating the event. A Thursday/Friday
-poll can legitimately offer somewhere open only on the Thursday.
+If more than one day was left ticked during step 2, the filter is "any of
+them", so **check the winner is actually open on the day you're announcing**.
+Ticking only the winning day makes this impossible to get wrong, which is why
+that's the instruction.
 
 ## 4. After the meetup, record it
 
