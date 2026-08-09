@@ -3,6 +3,13 @@
 
   "startTime": "18:30",
 
+  "mapsRegion": "GA",
+  "areaRegions": {
+    "North Augusta": "SC",
+    "Aiken": "SC"
+  },
+
+  "pollQuestionTemplate": "{group} — {monthYear} meetup. Where should we eat?",
   "eventNameTemplate": "{month} Meet & Mesh",
   "eventDescriptionTemplate": "{name} — {area}\n{address}\nMap: {maps}\n\nCome hang out, talk radios, and eat. All are welcome.",
 
