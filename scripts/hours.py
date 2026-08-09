@@ -244,8 +244,11 @@ def load_entries():
 
 def maps_url(e):
     f = e["fields"]
-    where = f.get("address") or (f.get("area", "") + ", " +
-                                 ("SC" if f.get("area") in ("Aiken", "North Augusta") else "GA"))
+    where = f.get("address")
+    if not where:
+        area = f.get("area", "")
+        region = paths.region_for(area)
+        where = area + (", " + region if region else "")
     return ("https://www.google.com/maps/search/?api=1&query=" +
             urllib.parse.quote(f.get("name", "") + ", " + where))
 

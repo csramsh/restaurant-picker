@@ -57,16 +57,44 @@ def require_own_data(what="write to the restaurant list"):
     )
 
 
+def load_config():
+    """The config as a dict, or {} if it can't be read.
+
+    Callers here are all best-effort — a broken config is validate.py's
+    problem to report, not something to crash a helper over.
+    """
+    import json
+    try:
+        return json.loads(config_path().read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def region_for(area, cfg=None):
+    """The state or region to tack onto a map search for this area.
+
+    Only matters for a restaurant with no address, where the map link has to
+    fall back to searching the name and area — and a bare area name is
+    ambiguous. "mapsRegion" covers the usual case of one group in one state;
+    "areaRegions" is for groups whose patch straddles a border, where a couple
+    of areas sit on the other side of the line.
+    """
+    if cfg is None:
+        cfg = load_config()
+    overrides = cfg.get("areaRegions") or {}
+    if area in overrides:
+        return str(overrides[area] or "")
+    return str(cfg.get("mapsRegion") or "")
+
+
 def start_minutes(default=18 * 60 + 30):
     """Minutes past midnight that the group's meetups start.
 
     From "startTime" in config.json (24-hour "HH:MM"). This is what makes
     open_days mean "still serving when we arrive" rather than merely "open".
     """
-    import json
     try:
-        cfg = json.loads(config_path().read_text(encoding="utf-8"))
-        hh, mm = str(cfg.get("startTime", "")).split(":")
+        hh, mm = str(load_config().get("startTime", "")).split(":")
         return int(hh) * 60 + int(mm)
     except Exception:
         return default

@@ -45,6 +45,21 @@ def load_config():
     for key in ("candidatesPerMonth", "areaCooldownMonths", "restaurantCooldownMonths"):
         if not isinstance(cfg.get(key), int):
             errors.append(f'config.json is missing the whole number "{key}".')
+
+    # A misspelled area here does nothing at all rather than failing loudly,
+    # so the map links for that area would quietly use the wrong state.
+    overrides = cfg.get("areaRegions")
+    if overrides is not None:
+        if not isinstance(overrides, dict):
+            errors.append('config.json "areaRegions" must be a set of '
+                          '"Area": "Region" pairs.')
+        else:
+            for area in overrides:
+                if area not in cfg["areas"]:
+                    errors.append(
+                        f'config.json "areaRegions" mentions "{area}", which is '
+                        "not in the areas list. Allowed: " + ", ".join(cfg["areas"])
+                    )
     return cfg
 
 

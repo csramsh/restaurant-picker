@@ -107,14 +107,27 @@ function monthLabel(m) {
   return names[parseInt(parts[1], 10) - 1] + ' ' + parts[0];
 }
 
-// Aiken and North Augusta are the South Carolina side.
-function stateFor(area) {
-  return (area === 'Aiken' || area === 'North Augusta') ? 'SC' : 'GA';
+// The state or region to tack onto a map search. Only used when a restaurant
+// has no address, where the link has to fall back to searching the name and
+// area — and a bare area name is ambiguous. "mapsRegion" covers one group in
+// one state; "areaRegions" is for a patch that straddles a border, where a
+// couple of areas sit on the other side of the line.
+function regionFor(area) {
+  var overrides = state.config.areaRegions || {};
+  if (Object.prototype.hasOwnProperty.call(overrides, area)) {
+    return String(overrides[area] || '');
+  }
+  return String(state.config.mapsRegion || '');
 }
 
 function mapsUrl(r) {
-  var q = r.address ? (r.name + ', ' + r.address)
-                    : (r.name + ', ' + r.area + ', ' + stateFor(r.area));
+  var q;
+  if (r.address) {
+    q = r.name + ', ' + r.address;
+  } else {
+    var region = regionFor(r.area);
+    q = r.name + ', ' + r.area + (region ? ', ' + region : '');
+  }
   return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
 }
 
@@ -424,9 +437,13 @@ function pick(month, nonce) {
 var POLL_QUESTION_MAX = 300;
 var POLL_ANSWER_MAX = 55;
 
+// Kept as the fallback so a config written before this was configurable still
+// produces exactly what it used to.
+var DEFAULT_POLL_QUESTION = '{group} — {monthYear} meetup. Where should we eat?';
+
 function pollQuestion(month) {
-  return state.config.groupName + ' — ' + monthLabel(month) +
-         ' meetup. Where should we eat?';
+  return fillTemplate(state.config.pollQuestionTemplate || DEFAULT_POLL_QUESTION,
+                      null, month);
 }
 
 // Answers can't hold an address and stay under 55 characters, so they carry
@@ -686,19 +703,26 @@ function renderRecent() {
   }
 }
 
-// Fill in the {placeholders} in the event templates from config.json.
+// Fill in the {placeholders} in the templates from config.json.
 // A line made up only of placeholders that come out empty — an {address} we
 // don't have, say — is dropped rather than left as a blank line.
+//
+// r is null for templates written before a winner exists, like the poll
+// question; the restaurant placeholders simply aren't offered there.
 function fillTemplate(tpl, r, month) {
   function subst(s) {
-    return s
+    s = s
       .replace(/\{month\}/g, monthLabel(month).split(' ')[0])
       .replace(/\{monthYear\}/g, monthLabel(month))
-      .replace(/\{group\}/g, state.config.groupName)
-      .replace(/\{name\}/g, r.name)
-      .replace(/\{area\}/g, r.area)
-      .replace(/\{address\}/g, r.address || '')
-      .replace(/\{maps\}/g, mapsUrl(r));
+      .replace(/\{group\}/g, state.config.groupName);
+    if (r) {
+      s = s
+        .replace(/\{name\}/g, r.name)
+        .replace(/\{area\}/g, r.area)
+        .replace(/\{address\}/g, r.address || '')
+        .replace(/\{maps\}/g, mapsUrl(r));
+    }
+    return s;
   }
   return String(tpl || '')
     .split('\n')

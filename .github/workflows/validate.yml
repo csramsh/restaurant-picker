@@ -24,3 +24,6 @@ jobs:
 
       - name: Test the opening-hours parser
         run: python scripts/test_hours.py
+
+      - name: Test the config helpers
+        run: python scripts/test_config.py

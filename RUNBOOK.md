@@ -160,14 +160,35 @@ so they stay available for an occasion.
 
 | Setting | Meaning |
 | --- | --- |
-| `groupName` | Shown in the page title and the poll question |
+| `groupName` | Shown in the page title and available to the templates as `{group}` |
+| `startTime` | 24-hour `"HH:MM"`. What `open_days` means by "still serving" |
 | `candidatesPerMonth` | How many options go to the vote |
 | `restaurantCooldownMonths` | Months before the same place can come up again |
 | `areaCooldownMonths` | Months before the same area can come up again |
 | `areaWeightExponent` | How hard to favour neglected areas. 1 gentle, 2 default, 3 aggressive |
 | `areas` | Your areas. Adding one here is required before any restaurant can use it |
-| `eventNameTemplate` | `{month}`, `{monthYear}`, `{group}` |
+| `mapsRegion` | State or region added to map searches. See below |
+| `areaRegions` | Per-area exceptions to `mapsRegion`. Optional |
+| `pollQuestionTemplate` | `{month}`, `{monthYear}`, `{group}` |
+| `eventNameTemplate` | Same three |
 | `eventDescriptionTemplate` | Also `{name}`, `{area}`, `{address}`, `{maps}` |
+
+**`mapsRegion` only matters for restaurants with no address.** With one, the
+map link searches the address and is unambiguous. Without one it falls back to
+the name and the area, and "Northgate" on its own could be anywhere — so the
+region gets appended. Set it to whatever disambiguates your patch (`"GA"`,
+`"Kent"`, `"NSW"`), or leave it empty to append nothing.
+
+If your area list **straddles a border**, list the exceptions in
+`areaRegions` rather than picking a side:
+
+```json
+"mapsRegion": "GA",
+"areaRegions": { "Aiken": "SC", "North Augusta": "SC" }
+```
+
+A misspelled area name there does nothing at all rather than complaining, so
+`validate.py` checks them against your `areas` list.
 
 Only one area is used per month, so with N areas an `areaCooldownMonths` above
 roughly N−2 will start forcing the picker to relax its own rules. It says so
