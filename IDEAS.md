@@ -14,7 +14,8 @@ re-deriving the reasoning.
   would fix it properly.
 - **Two branches of one chain are independent entries** and can both appear in
   a single draw when they're in different areas.
-- **The day filter is "open on *any* selected day"**, so the winning
-  combination of day and place still needs a human glance. That's deliberate —
-  the vote settles day and place together — but it means the picker can't
-  guarantee the pairing works.
+- **The day filter is "open on *any* selected day"**, so with several days
+  ticked the winning combination of day and place still needs a human glance.
+  Running the day poll first and then ticking only the winner avoids it
+  entirely, which is what the runbook tells you to do — but nothing stops
+  somebody leaving three days ticked and posting the place poll anyway.

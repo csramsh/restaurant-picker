@@ -5,6 +5,8 @@
 
   "mapsRegion": "",
 
+  "dayPoll": true,
+  "dayPollQuestionTemplate": "{group} — {monthYear}. Which day suits?",
   "pollQuestionTemplate": "{group} — {monthYear} meetup. Where should we eat?",
   "eventNameTemplate": "{month} Meetup",
   "eventDescriptionTemplate": "{name} — {area}\n{address}\nMap: {maps}\n\nCome along, everyone's welcome.",

@@ -14,10 +14,27 @@ The site is your GitHub Pages URL — `https://<owner>.github.io/<repo>/`.
 
 ## The monthly process
 
-### 1. Get the candidates
+### 1. Settle the day
 
-Open the site. The **Pick** tab shows a few restaurants for the current month,
-each in a different area.
+Open the site and go to the **Pick** tab.
+
+Open the **Days** dropdown at the top and tick the days you're willing to
+offer. Each becomes an answer under **Step 1 — poll the day**, with a count of
+how many places are open on it. If a day shows **0 open**, untick it — if it
+wins you'll have nowhere to go, and the page says so in yellow.
+
+Post that poll. A Discord poll **cannot** be made by pasting a block of text:
+use the **+** next to the message box → **Create Poll**, and paste the
+Question and each Answer into their own fields. Set the duration yourself.
+
+> If your group doesn't vote on the day, set `"dayPoll": false` in
+> `config.json` and this step disappears.
+
+### 2. Settle the place
+
+When the day poll closes, come back and tick **only the winning day**. The
+shortlist under **Candidates** is now restaurants that are genuinely open when
+you'll be there, and **Step 2 — poll the place** is the poll for it.
 
 The draw is seeded from the month, so it isn't really random — anyone opening
 the page this month sees the same shortlist. That's on purpose, so nobody
@@ -27,23 +44,16 @@ If a candidate genuinely won't work — closed, bad night, can't seat you —
 click **Reroll**. The page will say it's showing a reroll rather than the
 first draw. Mention that when you post, so it's above board.
 
-**If you already know which day you're offering**, tick it in the **Days**
-dropdown. Places open on *any* ticked day are offered. Places whose hours
-nobody has recorded are assumed open.
-
 **Special spots** stays on "Exclude specials" for an ordinary month. "Only
 specials" draws from the pricier places set aside for a celebration.
 
-### 2. Put it to the group
+Discord caps answers at **55 characters** and won't accept links, which is why
+the site gives you short answers plus a separate follow-up message carrying
+the addresses and map links. Send that as an ordinary message straight after.
 
-Copy the shortlist out of the site and post it however you normally vote.
-
-If you use Discord: a poll **cannot** be made by pasting a block of text. Use
-the **+** next to the message box → **Create Poll**, and paste the Question
-and each Answer into their own fields. Discord caps answers at **55
-characters** and won't accept links, which is why the site gives you short
-answers plus a separate follow-up message carrying the addresses and map
-links.
+**If you tick more than one day here**, the shortlist is places open on *any*
+of them, so the winning combination still needs a human glance. Ticking the
+one winning day avoids that entirely.
 
 ### 3. Create the event
 
@@ -169,7 +179,9 @@ so they stay available for an occasion.
 | `areas` | Your areas. Adding one here is required before any restaurant can use it |
 | `mapsRegion` | State or region added to map searches. See below |
 | `areaRegions` | Per-area exceptions to `mapsRegion`. Optional |
-| `pollQuestionTemplate` | `{month}`, `{monthYear}`, `{group}` |
+| `dayPoll` | `false` hides the day poll for groups that just declare the day |
+| `dayPollQuestionTemplate` | `{month}`, `{monthYear}`, `{group}` |
+| `pollQuestionTemplate` | Same three |
 | `eventNameTemplate` | Same three |
 | `eventDescriptionTemplate` | Also `{name}`, `{area}`, `{address}`, `{maps}` |
 
