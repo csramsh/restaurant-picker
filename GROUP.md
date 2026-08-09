@@ -20,8 +20,8 @@ hard way.
 | **Areas** | Eight, spanning both sides of the river — see below. |
 
 Because the start time never moves, `open_days` in `data/restaurants.yaml`
-means **open *and still serving* at 6:30pm**, not merely open that day. K & J
-was open Mondays and closed at six; it was no use to us. Check the closing
+means **open *and still serving* at 6:30pm**, not merely open that day. K and
+J Soul Bar and Grill closed at six and was no use to us. Check the closing
 time, not just the day.
 
 ## What qualifies
@@ -29,7 +29,7 @@ time, not just the day.
 A place goes on the list if it has all of these. Each one is here because
 getting it wrong cost us an evening, so the name attached to it is the point.
 
-- **Decent seating for a group.** We turn up in numbers.
+- **Seats a group without a fuss** — eight-plus people.
 - **A real dining room.** Ordering at the counter is fine — we've met at
   McAlister's and it worked. Drive-thru fast food is not.
 - **Enough decent food under $20 that everyone has a real choice.** The test
@@ -44,9 +44,9 @@ getting it wrong cost us an evening, so the name attached to it is the point.
   Burger is fine most nights and too loud to talk on the nights they host
   events, so it's the date that decides, not the place. Check their schedule
   before proposing it.
-- **Everyone can order their own plate.** *Meimei's* is off the list because
-  dim sum means ordering à la carte and sharing, which trips up anyone new to
-  it.
+- **Everyone can order their own plate.** *Meimei's Dim Sum* is off the list
+  because dim sum means ordering à la carte and sharing, which trips up anyone
+  new to it.
 - **They'll split checks and won't spring an automatic gratuity** on a large
   table. Worth asking when you call ahead — *Frog and the Hen* is off the list
   for doing both.
@@ -108,8 +108,11 @@ same menu. Use them as a hint and never as a verdict — the rule above is what
 decides.
 
 **Aggregator sites get addresses wrong** where the business's own listing gets
-them right. Two were corrected that way. Prefer the restaurant's own site or
-the Google listing.
+them right. Willie Jewell's had the wrong street number and Mellow Mushroom
+the wrong address, both from search summaries and both right on the business's
+own listing; Goolsby's opening days went the same way. A wrong house number
+sends the map link to a random pin, so prefer the restaurant's own site or the
+Google listing.
 
 ## Keeping up with upstream
 
