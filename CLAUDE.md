@@ -57,7 +57,16 @@ Prefer the restaurant's own site or the Google listing for addresses.
 ```bash
 python scripts/validate.py      # after any change under data/ or config.json
 python scripts/test_hours.py    # after any change to scripts/hours.py
+python scripts/test_config.py   # after any change to scripts/paths.py
 ```
+
+**Nothing group-specific goes in the app.** This is upstream: no place names,
+no state codes, no start times, no venue assumptions baked into `app.js` or
+`scripts/`. Anything that varies between groups belongs in `config.json` with
+a default that keeps existing forks working. Two of these leaked out of the
+original single-group version — a hardcoded `'SC' : 'GA'` and a hardcoded poll
+question — and both were found by a human reading the code, not by any test,
+because wrong-but-plausible output looks fine.
 
 **Don't hand-write throwaway queries against the data.** `scripts/report.py`
 answers the recurring questions — per-area counts, which day is thinnest,

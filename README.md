@@ -33,6 +33,7 @@ and nobody can rebuild it. Plain files in git will still work in five years.
 | `scripts/hours.py` | Turns pasted opening hours into the `open_days` field. |
 | `scripts/report.py` | Health check — area counts, thin days, gaps, history. |
 | `scripts/test_hours.py` | Regression tests for the hours parser. |
+| `scripts/test_config.py` | Regression tests for the config helpers. |
 | `RUNBOOK.md` | The monthly process, written for a non-technical volunteer. |
 | `CLAUDE.md`, `.claude/` | Context for [Claude Code](https://claude.com/claude-code), if you use it. |
 
