@@ -9,8 +9,10 @@
     "Aiken": "SC"
   },
 
-  "pollQuestionTemplate": "{month} Mesh & Meet - Pick a day!",
-  "eventNameTemplate": "{month} Meet & Mesh",
+  "dayPoll": true,
+  "dayPollQuestionTemplate": "{month} Mesh & Meet - Pick a day!",
+  "pollQuestionTemplate": "{month} Mesh & Meet - Where should we eat?",
+  "eventNameTemplate": "{month} Mesh & Meet",
   "eventDescriptionTemplate": "{name} — {area}\n{address}\nMap: {maps}\n\nCome hang out, talk radios, and eat. All are welcome.",
 
   "candidatesPerMonth": 3,
