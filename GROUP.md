@@ -15,8 +15,13 @@ hard way.
 | | |
 | --- | --- |
 | **Start time** | **6:30pm, always.** Everything downstream assumes it. |
-| **Where we vote** | Discord poll, three options, no links in the answers. |
-| **Day** | Polled along with the place, so it isn't fixed month to month. |
+| **Where we vote** | Discord. **Two polls**, day first, then place. |
+| **Day** | Not fixed month to month — the first poll settles it. |
+| **Place** | Second poll, three options, no links in the answers. |
+
+Run them in that order and tick **only the winning day** before generating the
+second poll. Every candidate is then somewhere genuinely open at 6:30 on the
+night, and nobody has to cross-check the pairing by hand.
 | **Areas** | Eight, spanning both sides of the river — see below. |
 
 Because the start time never moves, `open_days` in `data/restaurants.yaml`
