@@ -52,6 +52,19 @@ they're just name and area. The site shows a live character count. Then send
 the *Post this straight after* block as an ordinary message — it carries the
 addresses and map links that won't fit in the poll.
 
+**That block is shaped for Discord's renderer, not for the textarea.** Discord
+collapses indentation, turns a line starting `1.` into its own numbered list,
+and expands every bare URL into a preview card — three of which would bury the
+message. So: no indent, names in bold instead of numbers, and `<angle
+brackets>` round the links to suppress the cards. Don't "tidy" it back into an
+indented numbered list; it will not survive the paste.
+
+**The Date dropdown** lists only dates in the month falling on a ticked day,
+which is what makes it impossible to announce a Tuesday that lands on a
+Wednesday. It fills `{date}`, `{day}` and `{dayNum}`. A template using one of
+those renders nothing until a date is chosen, deliberately — a half-filled
+`@everyone` announcement is worse than an empty box.
+
 ## 3. Create the Discord event
 
 On the **Announce** tab, pick the month and the winner. Three fields fill in —

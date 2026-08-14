@@ -47,9 +47,19 @@ first draw. Mention that when you post, so it's above board.
 **Special spots** stays on "Exclude specials" for an ordinary month. "Only
 specials" draws from the pricier places set aside for a celebration.
 
+Pick the **Date** from the dropdown while you're there. It lists only the
+dates in this month that fall on a ticked day, so you can't announce a Tuesday
+that lands on a Wednesday. It's only required if your templates mention the
+date.
+
 Discord caps answers at **55 characters** and won't accept links, which is why
 the site gives you short answers plus a separate follow-up message carrying
 the addresses and map links. Send that as an ordinary message straight after.
+
+That message is written for how Discord renders rather than how it looks in
+the box: no indentation (Discord collapses it), no numbered lines (Discord
+turns those into a list of its own), and the map links are in angle brackets
+so you don't get three large map previews stacked underneath.
 
 **If you tick more than one day here**, the shortlist is places open on *any*
 of them, so the winning combination still needs a human glance. Ticking the
@@ -180,10 +190,25 @@ so they stay available for an occasion.
 | `mapsRegion` | State or region added to map searches. See below |
 | `areaRegions` | Per-area exceptions to `mapsRegion`. Optional |
 | `dayPoll` | `false` hides the day poll for groups that just declare the day |
-| `dayPollQuestionTemplate` | `{month}`, `{monthYear}`, `{group}` |
-| `pollQuestionTemplate` | Same three |
-| `eventNameTemplate` | Same three |
-| `eventDescriptionTemplate` | Also `{name}`, `{area}`, `{address}`, `{maps}` |
+| `dayPollQuestionTemplate` | Step 1's question |
+| `pollQuestionTemplate` | Step 2's question |
+| `followUpTemplate` | Opening line of the message you post under the poll |
+| `eventNameTemplate` | |
+| `eventDescriptionTemplate` | |
+
+**Placeholders.** Every template above takes `{group}`, `{month}`
+(*August*), `{monthYear}` (*August 2026*), and — once you've chosen a date on
+the Pick tab — `{date}` (*Tuesday 18 August*), `{day}` (*Tuesday*) and
+`{dayNum}` (*18*). Write the date whichever way round your group does:
+`{date}` for *Tuesday 18 August*, or `{day}, {month} {dayNum}` for
+*Tuesday, August 18*.
+
+The two event templates also take `{name}`, `{area}`, `{address}` and
+`{maps}`. Those aren't offered to the poll templates, which are written before
+anyone knows the winner.
+
+A template that mentions the date won't render until you've picked one — the
+box tells you so rather than posting *"@everyone  it is!"* with a hole in it.
 
 **`mapsRegion` only matters for restaurants with no address.** With one, the
 map link searches the address and is unambiguous. Without one it falls back to

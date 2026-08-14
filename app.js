@@ -32,6 +32,7 @@ var state = {
   nonce: 0,
   days: [],            // day filter; empty means any day
   specials: 'exclude', // exclude | include | only
+  meetupDate: '',      // "YYYY-MM-DD" once the day poll has settled it
 
   // The winner. Announce and Record are separate tabs weeks apart but they
   // need the same two answers, so the selectors on both are views onto this.
@@ -112,6 +113,57 @@ function monthLabel(m) {
   var names = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
                'August', 'September', 'October', 'November', 'December'];
   return names[parseInt(parts[1], 10) - 1] + ' ' + parts[0];
+}
+
+/* ------------------------------------------------------------------- dates
+ * The month and the day-of-week between them narrow to a handful of actual
+ * dates, so the date is offered as a short list rather than a free-text box
+ * nobody can typo. Built from local-time Date objects deliberately: "the 18th"
+ * means the 18th where the group lives, and UTC parsing of "2026-08-18" can
+ * land everyone on the 17th.
+ */
+
+var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
+                   'July', 'August', 'September', 'October', 'November',
+                   'December'];
+
+// Sunday is 0 in JavaScript; our DAYS array starts at Monday.
+function dayKeyFor(jsDay) { return DAYS[(jsDay + 6) % 7]; }
+
+function datesInMonthMatching(month, days) {
+  if (!days.length) return [];
+  var parts = String(month).split('-');
+  var y = parseInt(parts[0], 10);
+  var m = parseInt(parts[1], 10) - 1;
+  var out = [];
+  var d = new Date(y, m, 1);
+  while (d.getMonth() === m) {
+    if (days.indexOf(dayKeyFor(d.getDay())) !== -1) {
+      out.push(y + '-' + String(m + 1).padStart(2, '0') + '-' +
+               String(d.getDate()).padStart(2, '0'));
+    }
+    d.setDate(d.getDate() + 1);
+  }
+  return out;
+}
+
+function dateParts(iso) {
+  var p = String(iso).split('-');
+  if (p.length !== 3) return null;
+  var d = new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+  return {
+    day: DAY_NAMES[dayKeyFor(d.getDay())],
+    dayNum: String(d.getDate()),
+    monthName: MONTH_NAMES[d.getMonth()]
+  };
+}
+
+// "Tuesday 18 August". Groups who write dates the other way round compose
+// their own from {day}, {dayNum} and {month} rather than needing a format
+// setting.
+function dateLabel(iso) {
+  var p = dateParts(iso);
+  return p ? p.day + ' ' + p.dayNum + ' ' + p.monthName : '';
 }
 
 // The state or region to tack onto a map search. Only used when a restaurant
@@ -486,16 +538,32 @@ function pollAnswer(r) {
   return r.name.slice(0, POLL_ANSWER_MAX - 1) + '…';
 }
 
+var DEFAULT_FOLLOW_UP = 'Vote in the poll above — here\'s where each one is.';
+
+// Placeholders that can't be filled in until a date has been chosen. A
+// template using one of them isn't wrong, it's just not ready yet.
+var DATE_PLACEHOLDERS = /\{(date|day|dayNum)\}/;
+
 // The follow-up message, where links and addresses are allowed.
+//
+// Written for how Discord actually renders rather than how it looks in a
+// textarea. Discord collapses indentation, so nothing is indented; a line
+// beginning "1." becomes an auto-numbered list, so entries lead with the name
+// instead; and a bare URL grows a link preview, so three of them would bury
+// the message under three map cards — hence the angle brackets, which suppress
+// them. Blank lines between entries are the one bit of whitespace it honours.
 function pollText(result, month) {
-  var lines = [];
-  lines.push(pollQuestion(month));
-  lines.push('');
-  result.picks.forEach(function (r, i) {
-    lines.push((i + 1) + '. ' + r.name + ' — ' + whereLine(r));
-    lines.push('   ' + mapsUrl(r));
+  var tpl = state.config.followUpTemplate || DEFAULT_FOLLOW_UP;
+  if (DATE_PLACEHOLDERS.test(tpl) && !state.meetupDate) return '';
+
+  var blocks = [fillTemplate(tpl, null, month)];
+  result.picks.forEach(function (r) {
+    var block = ['**' + r.name + '** — ' + r.area];
+    if (r.address) block.push(r.address);
+    block.push('<' + mapsUrl(r) + '>');
+    blocks.push(block.join('\n'));
   });
-  return lines.join('\n');
+  return blocks.join('\n\n');
 }
 
 // Step 1: the poll that settles which day. Its answers are the days ticked in
@@ -567,11 +635,48 @@ function renderDayPoll() {
   }
 }
 
+// The month and the ticked days narrow the date to a handful of options, so
+// offer those rather than a free-text box. Anything else would let somebody
+// announce a Tuesday that falls on a Wednesday.
+function renderMeetupDate() {
+  var sel = el('meetupDate');
+  var options = datesInMonthMatching(state.month, state.days);
+
+  // Drop a choice that's no longer on offer. Changing the month or the day
+  // underneath a chosen date and keeping it would announce a stale one.
+  if (options.indexOf(state.meetupDate) === -1) state.meetupDate = '';
+
+  sel.innerHTML = '';
+  var blank = document.createElement('option');
+  blank.value = '';
+  blank.appendChild(text(options.length ? '— choose the date —'
+                                        : '— tick a day first —'));
+  sel.appendChild(blank);
+  options.forEach(function (iso) {
+    var o = document.createElement('option');
+    o.value = iso;
+    o.appendChild(text(dateLabel(iso)));
+    sel.appendChild(o);
+  });
+  sel.value = state.meetupDate;
+  sel.disabled = options.length === 0;
+
+  var hint = el('meetupDateHint');
+  if (!options.length) {
+    hint.textContent = 'Tick the winning day above and the dates in ' +
+      monthLabel(state.month) + ' appear here.';
+  } else {
+    hint.textContent = 'Feeds {date}, {day} and {dayNum} in the templates. ' +
+      'Only needed if yours use them.';
+  }
+}
+
 function renderPick() {
   var month = state.month;
   var result = pick(month, state.nonce);
 
   renderDayPoll();
+  renderMeetupDate();
 
   el('pickMonthLabel').textContent = monthLabel(month);
   el('nonceLabel').textContent = state.nonce === 0
@@ -688,7 +793,11 @@ function renderPick() {
     answers.appendChild(row);
   });
 
-  el('pollText').value = pollText(result, month);
+  var msg = pollText(result, month);
+  el('pollText').value = msg;
+  el('pollText').placeholder = msg ? ''
+    : 'Your followUpTemplate mentions the date, so pick one above and this ' +
+      'fills in.';
 }
 
 // Announce and Record each carry a copy of the month + winner selector.
@@ -812,10 +921,14 @@ function renderRecent() {
 // question; the restaurant placeholders simply aren't offered there.
 function fillTemplate(tpl, r, month) {
   function subst(s) {
+    var dp = dateParts(state.meetupDate);
     s = s
       .replace(/\{month\}/g, monthLabel(month).split(' ')[0])
       .replace(/\{monthYear\}/g, monthLabel(month))
-      .replace(/\{group\}/g, state.config.groupName);
+      .replace(/\{group\}/g, state.config.groupName)
+      .replace(/\{date\}/g, dateLabel(state.meetupDate))
+      .replace(/\{day\}/g, dp ? dp.day : '')
+      .replace(/\{dayNum\}/g, dp ? dp.dayNum : '');
     if (r) {
       s = s
         .replace(/\{name\}/g, r.name)
@@ -1138,6 +1251,11 @@ function boot() {
     el('copyPoll').onclick = function () { copyFrom('pollText', this); };
     el('copyQuestion').onclick = function () { copyFrom('pollQuestion', this); };
     el('copyDayQuestion').onclick = function () { copyFrom('dayPollQuestion', this); };
+    el('meetupDate').onchange = function () {
+      state.meetupDate = this.value;
+      renderPick();
+      renderChoiceOutputs();   // the event templates can use {date} too
+    };
     el('copyLine').onclick = function () { copyFrom('recordLine', this); };
     el('copyEventName').onclick = function () { copyFrom('eventName', this); };
     el('copyEventLocation').onclick = function () { copyFrom('eventLocation', this); };

@@ -122,6 +122,12 @@
     </p>
 
     <div class="form">
+      <label for="meetupDate">Date</label>
+      <select id="meetupDate"></select>
+    </div>
+    <p class="hint" id="meetupDateHint"></p>
+
+    <div class="form">
       <label for="pollQuestion">Question</label>
       <div class="copyrow">
         <input type="text" id="pollQuestion" readonly>
@@ -138,13 +144,20 @@
     </p>
 
     <h3>Post this straight after</h3>
-    <textarea id="pollText" rows="9" readonly></textarea>
+    <textarea id="pollText" rows="12" readonly></textarea>
     <div class="actions">
       <button id="copyPoll">Copy message</button>
     </div>
     <p class="hint">
-      The addresses and map links that won't fit in the poll. Send it as a
-      normal message so people can find the place.
+      The addresses and map links that won't fit in the poll. Send it as an
+      ordinary message, directly below the poll.
+    </p>
+    <p class="hint">
+      It's written for how Discord actually renders: no indentation, since
+      Discord collapses it, and the map links are wrapped in
+      <code>&lt;angle brackets&gt;</code> so you don't get three large map
+      previews stacked under the message. The opening line comes from
+      <code>followUpTemplate</code> in config.json.
     </p>
   </section>
 
