@@ -12,6 +12,7 @@
   "dayPoll": true,
   "dayPollQuestionTemplate": "{month} Mesh & Meet - Pick a day!",
   "pollQuestionTemplate": "{month} Mesh & Meet - Where should we eat?",
+  "followUpTemplate": "@everyone {date} it is! Where do you want to eat? Vote in the poll above.",
   "eventNameTemplate": "{month} Mesh & Meet",
   "eventDescriptionTemplate": "{name} — {area}\n{address}\nMap: {maps}\n\nCome hang out, talk radios, and eat. All are welcome.",
 
