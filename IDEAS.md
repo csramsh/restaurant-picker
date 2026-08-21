@@ -5,6 +5,58 @@ re-deriving the reasoning.
 
 ---
 
+## A restaurant that's out for *this month only*
+
+**Wanted, not built.** There's a real case behind this one.
+
+August 2026: the draw offered Monterrey (North Augusta), and a member said
+there was heavy construction out front. Not closed, not ruled out — just a bad
+month. Nothing in the tool covers that:
+
+- `active: no` is permanent until somebody remembers to undo it, and nobody
+  will. It also reads as "we ruled this out", which isn't what happened.
+- **Reroll is all-or-nothing.** It re-draws every slot. Measured on that exact
+  month: rerolling to lose Monterrey also lost the other two candidates and
+  produced three completely different places.
+
+So the organiser took one candidate from the reroll and kept two from the
+first draw. That works, but it quietly breaks the promise the Pick tab makes
+in writing — *anyone loading this page sees the same shortlist* — because
+everyone else still saw Monterrey, and the page still said "first draw".
+
+### Shape it would take
+
+`unavailable_until: 2026-10` on the entry, with the reason in `notes`.
+
+- **In the data, not a button on the page.** A page-local toggle would give
+  the organiser a different shortlist from everyone else, which is the same
+  break by another route. In the file, everyone sees it and the reason travels
+  with it.
+- **It expires by itself.** That's the whole advantage over `active: no` —
+  nobody has to diarise the undo.
+- `report.py` lists ones whose date has passed, so they get tidied up; the app
+  just ignores an expired date rather than making it an error.
+
+### What it does to the draw — measured, not assumed
+
+Removing one restaurant from the pool **changes only the slot for its own
+area**. The other candidates are untouched, which is exactly the surgical
+edit that had to be done by hand.
+
+Two caveats found by testing rather than reasoning:
+
+- **That area's pick can change even when the excluded place wasn't the one
+  drawn.** The single weighted roll is taken over a different total, so it
+  lands elsewhere. Verified: excluding Monterrey in months where it was never
+  a candidate still swapped Brink's Tavern for The Back Porch.
+- **If the exclusion empties the area**, the eligible-area list changes and
+  the whole draw shifts. Unavoidable, and rare, but don't promise otherwise.
+
+Neither is a reason not to build it. Both are reasons not to describe it as
+"replaces just that one card" in the UI.
+
+---
+
 ## Opening hours need re-checking on a cycle, and a visit should count
 
 **Wanted, not built.**
