@@ -640,7 +640,10 @@ restaurants:
     open_days: Mon Tue Wed Thu Fri Sat Sun
     notes: Separate owners aside, there is a Martinez location on the list too.
       August 2026 — a member reported heavy construction out front and we passed
-      on it that month. Expected to be temporary; check before proposing it.
+      on it that month. The November date below is a review reminder, not
+      anything the contractors said. If the work is done sooner, delete the
+      line; if it's still going, push the month out.
+    unavailable_until: 2026-11
     active: yes
 
   # === Aiken ================================================================
