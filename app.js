@@ -308,6 +308,9 @@ function loadAll() {
         // null means "we don't know the hours" — treated as open every day
         openDays: r.open_days ? String(r.open_days).trim().split(/\s+/) : null,
         category: r.category === 'special' ? 'special' : 'normal',
+        // "back in this month". Expires by itself, which is the whole point.
+        unavailableUntil: r.unavailable_until
+          ? String(r.unavailable_until).trim() : '',
         active: r.active !== false && r.active !== 'no'
       };
     });
@@ -387,6 +390,14 @@ function openOnSelectedDays(r) {
   return state.days.some(function (d) { return r.openDays.indexOf(d) !== -1; });
 }
 
+// Out for a while but coming back — roadworks outside, a refit, a chef gone
+// for the summer. Distinct from active:no, which is permanent until a human
+// undoes it, and from category:special, which is about price. Lexical
+// comparison is safe on "YYYY-MM" and needs no date parsing.
+function availableIn(r, month) {
+  return !r.unavailableUntil || month >= r.unavailableUntil;
+}
+
 function matchesSpecialsFilter(r) {
   if (state.specials === 'only') return r.category === 'special';
   if (state.specials === 'include') return true;
@@ -395,7 +406,7 @@ function matchesSpecialsFilter(r) {
 
 function eligibleIn(area, month, restCooldown) {
   return state.restaurants.filter(function (r) {
-    return r.active && r.area === area &&
+    return r.active && r.area === area && availableIn(r, month) &&
            openOnSelectedDays(r) && matchesSpecialsFilter(r) &&
            gapForRestaurant(r.id, month).gap >= restCooldown;
   });
@@ -406,7 +417,8 @@ function eligibleIn(area, month, restCooldown) {
 function hiddenByDayFilter() {
   if (state.days.length === 0) return 0;
   return state.restaurants.filter(function (r) {
-    return r.active && matchesSpecialsFilter(r) && !openOnSelectedDays(r);
+    return r.active && matchesSpecialsFilter(r) &&
+           availableIn(r, state.month) && !openOnSelectedDays(r);
   }).length;
 }
 
@@ -524,6 +536,7 @@ function dayPollEnabled() {
 function placesOpenOn(day) {
   return state.restaurants.filter(function (r) {
     return r.active && matchesSpecialsFilter(r) &&
+           availableIn(r, state.month) &&
            (!r.openDays || r.openDays.indexOf(day) !== -1);
   }).length;
 }
@@ -1020,10 +1033,12 @@ function renderData() {
     .forEach(function (r) {
       var g = gapForRestaurant(r.id, month);
       var cooled = g.gap >= state.config.restaurantCooldownMonths;
-      var eligible = r.active && cooled && openOnSelectedDays(r) &&
+      var available = availableIn(r, month);
+      var eligible = r.active && cooled && available && openOnSelectedDays(r) &&
                      matchesSpecialsFilter(r);
       var status;
       if (!r.active) status = 'retired';
+      else if (!available) status = 'paused until ' + monthLabel(r.unavailableUntil);
       else if (!matchesSpecialsFilter(r)) status = 'special occasion';
       else if (!openOnSelectedDays(r)) status = 'shut on a chosen day';
       else if (!cooled) status = 'cooling down';
@@ -1093,11 +1108,13 @@ function renderData() {
   }
 
   var live = state.restaurants.filter(function (r) { return r.active; });
+  var paused = live.filter(function (r) { return !availableIn(r, month); });
   el('summary').textContent =
     live.filter(function (r) { return r.category === 'normal'; }).length +
     ' in the normal rotation · ' +
     live.filter(function (r) { return r.category === 'special'; }).length +
     ' special occasion · ' +
+    (paused.length ? paused.length + ' paused · ' : '') +
     state.restaurants.filter(function (r) { return !r.active; }).length +
     ' retired · ' + state.history.length + ' meetups on record · ' +
     live.filter(function (r) { return !r.openDays; }).length +

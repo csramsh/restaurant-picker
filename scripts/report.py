@@ -13,6 +13,7 @@ for "what does the data say".
 """
 
 import csv
+import datetime
 import io
 import json
 import sys
@@ -119,6 +120,24 @@ def main():
     print("  open questions in notes: %d" % len(questions))
     for r in questions:
         print("     %s (%s)" % (r["name"], r["area"]))
+
+    # ------------------------------------------------------------ paused
+    # An expired pause is invisible on the site — it just quietly starts
+    # working again — so this is the only place anyone finds out it can be
+    # deleted. Left alone it does no harm; it's tidy-up, not a fault.
+    this_month = datetime.date.today().strftime("%Y-%m")
+    paused = [r for r in live if r.get("unavailable_until")]
+    if paused:
+        current = [r for r in paused if str(r["unavailable_until"]) > this_month]
+        expired = [r for r in paused if str(r["unavailable_until"]) <= this_month]
+        print()
+        print("PAUSED")
+        for r in sorted(current, key=lambda r: str(r["unavailable_until"])):
+            print("  back %s  %s (%s)"
+                  % (r["unavailable_until"], r["name"], r["area"]))
+        for r in sorted(expired, key=lambda r: str(r["unavailable_until"])):
+            print("  EXPIRED %s  %s (%s) - back in the draw, line can go"
+                  % (r["unavailable_until"], r["name"], r["area"]))
 
     # -------------------------------------------------------------- history
     print()

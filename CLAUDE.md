@@ -79,9 +79,17 @@ open Monday that closes before the start time must not have Mon in the list.
 Missing `open_days` is treated as "open every day", so leaving it out is safe;
 guessing is not.
 
-**`active: no` is for closed or ruled-out. `category: special` is for
-too-pricey.** Never use `active: no` to mean expensive — specials are real,
-open restaurants a group might still choose for an occasion.
+**Three ways out of the draw, and they are not interchangeable:**
+
+| | |
+| --- | --- |
+| `active: no` | closed, or ruled out for good |
+| `category: special` | real and open, just too pricey for an ordinary month |
+| `unavailable_until: 2026-10` | temporary — roadworks, a refit, a season |
+
+Reach for `unavailable_until` whenever the reason has an end. It expires by
+itself; `active: no` waits for a human who will not come. Retiring a place
+that was only having its car park dug up is how a list quietly shrinks.
 
 **Names never contain locations.** Not `The Feed Sack (Aiken)` — the site adds
 the area itself. Two branches of a chain are distinguished by `area` and

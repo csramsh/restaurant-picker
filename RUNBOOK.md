@@ -162,15 +162,34 @@ turn up at, price, noise, enough menu range that nobody is stuck, whether
 everyone can order their own plate, whether they'll split the bill, and
 whether they're still serving when you get there.
 
-### Removing a restaurant
+### Taking a restaurant out
 
-Set `active: no` rather than deleting. That keeps its history resolving and
-stops the numbers going strange. Always leave a note saying why — that note is
-the only reason the next person won't re-add it.
+Three different situations, three different fields. Picking the wrong one is
+the usual way a place vanishes for good by accident.
 
-Use it for places that have **closed** or been **ruled out for good**. Don't
-use it for expensive places: leave `active: yes` and add `category: special`
-so they stay available for an occasion.
+| Situation | What to set |
+| --- | --- |
+| Closed, or ruled out for good | `active: no` |
+| Fine, but too pricey for an ordinary month | `category: special` |
+| Out for a while — roadworks, a refit, closed for the season | `unavailable_until: 2026-10` |
+
+**Never delete the entry.** That keeps its history resolving and stops the
+numbers going strange. Always leave a note saying why — that note is the only
+reason the next person won't undo your decision.
+
+`unavailable_until` means *back in the draw that month*, and the important
+part is that **it expires by itself**. `active: no` needs a human to remember
+to undo it, and nobody ever does; a place that reopened in March is still
+missing in November. If you know roughly when they'll be back, this is the
+field.
+
+If you don't know when — say the refit has no end date — put a month a few
+ahead and let it come back for review then. A place that returns to the draw
+too early gets skipped once. A place retired by mistake is gone until somebody
+happens to read the file.
+
+`python scripts/report.py` lists what's paused, and flags any whose month has
+passed so the line can be deleted.
 
 ---
 

@@ -31,6 +31,11 @@
 #   it. Leave  active: yes  and set  category: special  instead. Those stay
 #   out of the normal draw, and the site can list them on their own.
 #
+#   And if it's only out for a while — roadworks outside, a refit, closed for
+#   the summer — DON'T retire it either. Set  unavailable_until: 2026-10
+#   ("back in October") and say why in the notes. It comes back on its own,
+#   which  active: no  never does, because nobody remembers to undo that.
+#
 # FIELDS
 #   id       required, unique, lowercase-with-dashes. NEVER change it after a
 #            visit is recorded — data/history.csv points at it.
@@ -47,6 +52,9 @@
 #   notes    optional, free text. Record WHY a judgement was made, not just
 #            what — the reason is what stops it being re-litigated later.
 #   active   yes or no. no means closed or ruled out, NOT expensive.
+#   unavailable_until  optional, a month like 2026-10 meaning "back in the
+#            draw that month". For a temporary problem, not a permanent one.
+#            Ignored once the month arrives; delete the line when you notice.
 # ---------------------------------------------------------------------------
 
 restaurants:

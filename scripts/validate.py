@@ -21,7 +21,7 @@ import paths  # noqa: E402
 
 ROOT = paths.ROOT
 ALLOWED_KEYS = {"id", "name", "area", "address", "cuisine", "open_days",
-                "category", "notes", "active"}
+                "category", "notes", "active", "unavailable_until"}
 REQUIRED_KEYS = {"id", "name", "area"}
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 MONTH_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
@@ -155,6 +155,28 @@ def load_restaurants(areas):
                         f"{where}: open_days is empty. Leave the field out "
                         "entirely if you don't know the hours."
                     )
+
+        # A pause with no stated reason is indistinguishable from a mistake by
+        # the time anyone reads it, and an expired one is invisible without
+        # report.py, so both get flagged here rather than sitting silently.
+        until = entry.get("unavailable_until")
+        if until is not None:
+            if not isinstance(until, str) or not MONTH_RE.match(until):
+                errors.append(
+                    f'{where}: unavailable_until must be a month like 2026-10 '
+                    f'(got "{until}"). It means "back in that month".'
+                )
+            elif not entry.get("notes"):
+                warnings.append(
+                    f"{where} is paused with unavailable_until but has no notes "
+                    "saying why. In a month nobody will remember."
+                )
+            if entry.get("active") is False:
+                warnings.append(
+                    f"{where} is both retired and paused. active: no already "
+                    "keeps it out of the draw, so unavailable_until does "
+                    "nothing here - drop one of them."
+                )
 
         if not entry.get("address"):
             warnings.append(f"{where} has no address yet.")

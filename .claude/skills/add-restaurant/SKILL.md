@@ -37,6 +37,13 @@ same argument recurring later, and it belongs in `GROUP.md`.
 If somewhere fails only on price, it still belongs in the file — as
 `category: special`, not `active: no`.
 
+And if the problem has an end date — roadworks outside, a refit, closed for
+the season — use `unavailable_until: 2026-10` ("back in the draw that month")
+rather than retiring it. It lapses on its own. `active: no` waits for a human
+to undo it, and that human never arrives, so a place that reopened in spring
+is still missing at Christmas. **Whenever somebody says a place is out
+"for now", that phrase is this field.**
+
 ## 2. Look it up
 
 Open the Google Maps listing in a browser the user can see, and have them read
