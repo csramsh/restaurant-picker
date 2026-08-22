@@ -57,6 +57,11 @@ people to, so the two pressures point in useful opposite directions.
   would fix it properly.
 - **Two branches of one chain are independent entries** and can both appear in
   a single draw when they're in different areas.
+- **Reroll is all-or-nothing.** It re-draws every slot, so losing one bad
+  candidate costs you the other two. `unavailable_until` covers the common
+  case (a place that's out for a while), but not "this one's fine, I just
+  want a different draw for that slot". Measured: pausing one candidate
+  changes 1 of 3 slots, rerolling changes all 3.
 - **The day filter is "open on *any* selected day"**, so with several days
   ticked the winning combination of day and place still needs a human glance.
   Running the day poll first and then ticking only the winner avoids it
