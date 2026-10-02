@@ -5,7 +5,7 @@ spread across the region, avoiding places you've been to recently. You put the
 shortlist to a vote however you normally would; the picker's job is to stop the
 same three places winning forever and to keep the meetups moving around.
 
-**Live demo:** https://welbow.github.io/restaurant-picker/ — running on invented
+**Live demo:** https://welbow.github.io/restaurant-picker-base/ — running on invented
 data, so you can click about before deciding anything.
 
 Built for a Meshtastic group in the Augusta area, but there's nothing regional
