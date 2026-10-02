@@ -5,7 +5,7 @@ Augusta, Georgia and Aiken, South Carolina. We eat together once a month and
 call it **Meet & Mesh**.
 
 This file is CSRA's own. `RUNBOOK.md` and the rest come from
-[welbow/restaurant-picker](https://github.com/welbow/restaurant-picker)
+[welbow/restaurant-picker-base](https://github.com/welbow/restaurant-picker-base)
 upstream — if you want to change how the *app* works, that's where it lives.
 What's here is the local knowledge: how we run it and what we've learned the
 hard way.
